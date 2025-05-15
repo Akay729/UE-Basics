@@ -1,0 +1,42 @@
+[
+	{
+		"file": "C:\\Users\\mrale\\Documents\\Unreal Projects\\test\\Obstacle\\Source\\Obstacle\\MovingPlatform.cpp",
+		"arguments": [
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.43.34808\\bin\\Hostx64\\x64\\cl.exe",
+			"@C:\\Users\\mrale\\Documents\\Unreal Projects\\test\\Obstacle\\.vscode\\compileCommands_Default\\Obstacle.1.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.5\\Engine\\Source"
+	},
+	{
+		"file": "C:\\Users\\mrale\\Documents\\Unreal Projects\\test\\Obstacle\\Source\\Obstacle\\MovingPlatform.h",
+		"arguments": [
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.43.34808\\bin\\Hostx64\\x64\\cl.exe",
+			"@C:\\Users\\mrale\\Documents\\Unreal Projects\\test\\Obstacle\\.vscode\\compileCommands_Default\\Obstacle.1.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.5\\Engine\\Source"
+	},
+	{
+		"file": "C:\\Users\\mrale\\Documents\\Unreal Projects\\test\\Obstacle\\Source\\Obstacle\\Obstacle.Build.cs",
+		"arguments": [
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.43.34808\\bin\\Hostx64\\x64\\cl.exe",
+			"@C:\\Users\\mrale\\Documents\\Unreal Projects\\test\\Obstacle\\.vscode\\compileCommands_Default\\Obstacle.1.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.5\\Engine\\Source"
+	},
+	{
+		"file": "C:\\Users\\mrale\\Documents\\Unreal Projects\\test\\Obstacle\\Source\\Obstacle\\Obstacle.cpp",
+		"arguments": [
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.43.34808\\bin\\Hostx64\\x64\\cl.exe",
+			"@C:\\Users\\mrale\\Documents\\Unreal Projects\\test\\Obstacle\\.vscode\\compileCommands_Default\\Obstacle.1.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.5\\Engine\\Source"
+	},
+	{
+		"file": "C:\\Users\\mrale\\Documents\\Unreal Projects\\test\\Obstacle\\Source\\Obstacle\\Obstacle.h",
+		"arguments": [
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.43.34808\\bin\\Hostx64\\x64\\cl.exe",
+			"@C:\\Users\\mrale\\Documents\\Unreal Projects\\test\\Obstacle\\.vscode\\compileCommands_Default\\Obstacle.1.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.5\\Engine\\Source"
+	}
+]
