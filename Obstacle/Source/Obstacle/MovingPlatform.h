@@ -19,8 +19,21 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+private:
+	
+	FVector upPosition; 
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	UPROPERTY(EditAnywhere)
+	FVector Location = FVector(4800, -13000, 900);
 
+	UPROPERTY(EditAnywhere, Category="Movement")
+	float MovementSpeed = 100;
+
+	UPROPERTY(EditAnywhere, Category="Movement")
+	float MaxX = 5200.0f;
+	UPROPERTY(EditAnywhere, Category="Movement")
+	float MinX = 4700.0f;
 };

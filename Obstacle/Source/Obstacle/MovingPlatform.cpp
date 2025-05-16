@@ -1,6 +1,4 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "MovingPlatform.h"
 
 // Sets default values
@@ -15,6 +13,8 @@ AMovingPlatform::AMovingPlatform()
 void AMovingPlatform::BeginPlay()
 {
 	Super::BeginPlay();
+	upPosition = Location;
+	SetActorLocation(Location);
 	
 }
 
@@ -22,6 +22,15 @@ void AMovingPlatform::BeginPlay()
 void AMovingPlatform::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	FVector CurrentLocation = GetActorLocation();
+	if (CurrentLocation.X >= MaxX || CurrentLocation.X <= MinX )
+	{
+		MovementSpeed *= -1.0f;
+	}
+	upPosition.X += DeltaTime * MovementSpeed;
+	SetActorLocation(upPosition);
+	
+
 
 }
 
