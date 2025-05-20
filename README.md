@@ -33,4 +33,4 @@ To explore or use the contents, it's recommended to have:
 - I'm not using any plugin in the editor right now
 ---
 
-Feel free to clone, modify, and use this folder for your Unreal Engine experiments!
+Feel free to clone, modify, and use this folder for your Unreal Engine experiments !
