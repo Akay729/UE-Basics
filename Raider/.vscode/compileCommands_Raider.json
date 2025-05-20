@@ -1,0 +1,106 @@
+[
+	{
+		"file": "C:\\Users\\mrale\\Documents\\Unreal Projects\\test\\Raider\\Source\\Raider\\Raider.Build.cs",
+		"arguments": [
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.43.34808\\bin\\Hostx64\\x64\\cl.exe",
+			"@C:\\Users\\mrale\\Documents\\Unreal Projects\\test\\Raider\\.vscode\\compileCommands_Raider\\Raider.1.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.5\\Engine\\Source"
+	},
+	{
+		"file": "C:\\Users\\mrale\\Documents\\Unreal Projects\\test\\Raider\\Source\\Raider\\Raider.cpp",
+		"arguments": [
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.43.34808\\bin\\Hostx64\\x64\\cl.exe",
+			"@C:\\Users\\mrale\\Documents\\Unreal Projects\\test\\Raider\\.vscode\\compileCommands_Raider\\Raider.1.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.5\\Engine\\Source"
+	},
+	{
+		"file": "C:\\Users\\mrale\\Documents\\Unreal Projects\\test\\Raider\\Source\\Raider\\Raider.h",
+		"arguments": [
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.43.34808\\bin\\Hostx64\\x64\\cl.exe",
+			"@C:\\Users\\mrale\\Documents\\Unreal Projects\\test\\Raider\\.vscode\\compileCommands_Raider\\Raider.1.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.5\\Engine\\Source"
+	},
+	{
+		"file": "C:\\Users\\mrale\\Documents\\Unreal Projects\\test\\Raider\\Source\\Raider\\RaiderCharacter.cpp",
+		"arguments": [
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.43.34808\\bin\\Hostx64\\x64\\cl.exe",
+			"@C:\\Users\\mrale\\Documents\\Unreal Projects\\test\\Raider\\.vscode\\compileCommands_Raider\\Raider.1.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.5\\Engine\\Source"
+	},
+	{
+		"file": "C:\\Users\\mrale\\Documents\\Unreal Projects\\test\\Raider\\Source\\Raider\\RaiderCharacter.h",
+		"arguments": [
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.43.34808\\bin\\Hostx64\\x64\\cl.exe",
+			"@C:\\Users\\mrale\\Documents\\Unreal Projects\\test\\Raider\\.vscode\\compileCommands_Raider\\Raider.1.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.5\\Engine\\Source"
+	},
+	{
+		"file": "C:\\Users\\mrale\\Documents\\Unreal Projects\\test\\Raider\\Source\\Raider\\RaiderGameMode.cpp",
+		"arguments": [
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.43.34808\\bin\\Hostx64\\x64\\cl.exe",
+			"@C:\\Users\\mrale\\Documents\\Unreal Projects\\test\\Raider\\.vscode\\compileCommands_Raider\\Raider.1.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.5\\Engine\\Source"
+	},
+	{
+		"file": "C:\\Users\\mrale\\Documents\\Unreal Projects\\test\\Raider\\Source\\Raider\\RaiderGameMode.h",
+		"arguments": [
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.43.34808\\bin\\Hostx64\\x64\\cl.exe",
+			"@C:\\Users\\mrale\\Documents\\Unreal Projects\\test\\Raider\\.vscode\\compileCommands_Raider\\Raider.1.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.5\\Engine\\Source"
+	},
+	{
+		"file": "C:\\Users\\mrale\\Documents\\Unreal Projects\\test\\Raider\\Source\\Raider\\RaiderPickUpComponent.cpp",
+		"arguments": [
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.43.34808\\bin\\Hostx64\\x64\\cl.exe",
+			"@C:\\Users\\mrale\\Documents\\Unreal Projects\\test\\Raider\\.vscode\\compileCommands_Raider\\Raider.1.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.5\\Engine\\Source"
+	},
+	{
+		"file": "C:\\Users\\mrale\\Documents\\Unreal Projects\\test\\Raider\\Source\\Raider\\RaiderPickUpComponent.h",
+		"arguments": [
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.43.34808\\bin\\Hostx64\\x64\\cl.exe",
+			"@C:\\Users\\mrale\\Documents\\Unreal Projects\\test\\Raider\\.vscode\\compileCommands_Raider\\Raider.1.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.5\\Engine\\Source"
+	},
+	{
+		"file": "C:\\Users\\mrale\\Documents\\Unreal Projects\\test\\Raider\\Source\\Raider\\RaiderProjectile.cpp",
+		"arguments": [
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.43.34808\\bin\\Hostx64\\x64\\cl.exe",
+			"@C:\\Users\\mrale\\Documents\\Unreal Projects\\test\\Raider\\.vscode\\compileCommands_Raider\\Raider.1.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.5\\Engine\\Source"
+	},
+	{
+		"file": "C:\\Users\\mrale\\Documents\\Unreal Projects\\test\\Raider\\Source\\Raider\\RaiderProjectile.h",
+		"arguments": [
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.43.34808\\bin\\Hostx64\\x64\\cl.exe",
+			"@C:\\Users\\mrale\\Documents\\Unreal Projects\\test\\Raider\\.vscode\\compileCommands_Raider\\Raider.1.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.5\\Engine\\Source"
+	},
+	{
+		"file": "C:\\Users\\mrale\\Documents\\Unreal Projects\\test\\Raider\\Source\\Raider\\RaiderWeaponComponent.cpp",
+		"arguments": [
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.43.34808\\bin\\Hostx64\\x64\\cl.exe",
+			"@C:\\Users\\mrale\\Documents\\Unreal Projects\\test\\Raider\\.vscode\\compileCommands_Raider\\Raider.1.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.5\\Engine\\Source"
+	},
+	{
+		"file": "C:\\Users\\mrale\\Documents\\Unreal Projects\\test\\Raider\\Source\\Raider\\RaiderWeaponComponent.h",
+		"arguments": [
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.43.34808\\bin\\Hostx64\\x64\\cl.exe",
+			"@C:\\Users\\mrale\\Documents\\Unreal Projects\\test\\Raider\\.vscode\\compileCommands_Raider\\Raider.1.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.5\\Engine\\Source"
+	}
+]
