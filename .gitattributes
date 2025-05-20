@@ -1,0 +1,2 @@
+*.ext filter=lfs diff=lfs merge=lfs -text
+Raider/Content/static/** filter=lfs diff=lfs merge=lfs -text
