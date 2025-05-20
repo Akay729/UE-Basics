@@ -3,19 +3,18 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/ActorComponent.h"
-#include "Mover.generated.h"
-
+#include "Components/SceneComponent.h"
+#include "Grabber.generated.h"
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class RAIDER_API UMover : public UActorComponent
+class RAIDER_API UGrabber : public USceneComponent
 {
 	GENERATED_BODY()
 
 public:	
 	// Sets default values for this component's properties
-	UMover();
+	UGrabber();
 
 protected:
 	// Called when the game starts
@@ -24,17 +23,6 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-private:
-	float MyFloat;
-	FVector OrginalLocation;
-	
-	UPROPERTY(EditAnywhere)
-	FVector MoveOffset;
 
-	UPROPERTY(EditAnywhere)
-	float TimeToMove = 2;
-
-	UPROPERTY(EditAnywhere)
-	bool Move;
-
+		
 };

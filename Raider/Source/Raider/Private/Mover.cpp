@@ -2,6 +2,7 @@
 
 
 #include "Mover.h"
+#include "Math/UnrealMathUtility.h"
 
 // Sets default values for this component's properties
 UMover::UMover()
@@ -19,9 +20,7 @@ void UMover::BeginPlay()
 {
 	Super::BeginPlay();
 	MyFloat = 29;
-
-	// ...
-	
+	OrginalLocation =  GetOwner()->GetActorLocation();	
 }
 
 
@@ -29,17 +28,27 @@ void UMover::BeginPlay()
 void UMover::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	AActor* Owner = GetOwner();
+/* 	AActor* Owner = GetOwner();
 	FString name = Owner->GetActorNameOrLabel();
 	FVector CurrentLocation = Owner->GetActorLocation();
 
 	float* MyFloatPointer = &MyFloat;
+
+	UE_LOG(LogTemp, Display, TEXT("Mover Owner: %s Location %s "), *name, *CurrentLocation.ToString());
+
 	UE_LOG(LogTemp, Display, TEXT("Componet pointer: %p "), Owner);
 	UE_LOG(LogTemp, Display, TEXT("Componet address: %p "), &Owner);
 	UE_LOG(LogTemp, Display, TEXT("Current Locaiton: %s "), *CurrentLocation.ToString());
 	UE_LOG(LogTemp, Display, TEXT("Componet address: %s "), *name); // *name è un scorciatoia per ottenere Fstring in TCHAR*
-	
+	 */
+	if (Move)
+	{
+		FVector CurrentLocation = GetOwner()->GetActorLocation();
+		FVector TargetLocation = OrginalLocation + MoveOffset;
+		float Speed = FVector::Distance(CurrentLocation, TargetLocation)/TimeToMove;
+		FVector NewLocation = FMath::VInterpConstantTo(CurrentLocation, TargetLocation, DeltaTime, 50);
+		GetOwner()->SetActorLocation(NewLocation);
+	}
 
-	// ...
 }
 
