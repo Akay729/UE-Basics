@@ -2,6 +2,8 @@
 
 
 #include "Grabber.h"
+#include "Engine/World.h"
+#include "DrawDebugHelpers.h"
 
 // Sets default values for this component's properties
 UGrabber::UGrabber()
@@ -29,8 +31,19 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	FRotator CurrentRotation = GetComponentRotation();
-	UE_LOG(LogTemp, Display, TEXT("Rotation: %s"), *CurrentRotation.ToString()); 
+	UWorld* World = GetWorld();
+	if(World)
+	{
 
+		now = World->TimeSeconds();
+		//now = World->GetTimeSeconds(); //Sono la stessa funzione
+		
+		bool = World->LineTraceSingleByChannel(s,e);
+
+	}
+	double now = GetWorld()->GetTimeSeconds();
+	UE_LOG(LogTemp, Display, TEXT("Rotation: %s"), *CurrentRotation.ToString());
+	UE_LOG(LogTemp, Display, TEXT("Time: %.5f"), now);
 	// ...
 }
 
