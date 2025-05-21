@@ -20,9 +20,6 @@ UGrabber::UGrabber()
 void UGrabber::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// ...
-	
 }
 
 
@@ -30,7 +27,21 @@ void UGrabber::BeginPlay()
 void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	FRotator CurrentRotation = GetComponentRotation();
+
+	FVector Start = GetOwner()->GetActorLocation();
+	FVector End = Start + GetForwardVector()*Distance;
+
+/* 	FRotator ComponertRotation = GetComponentRotation();
+	FVector Forward = ComponentRotation.Vector();
+	End += Forward * 100;  */
+
+
+	DrawDebugLine(GetWorld(),Start,End,FColor::Green);
+
+
+
+
+/* 	FRotator CurrentRotation = GetComponentRotation();
 	UWorld* World = GetWorld();
 	if(World)
 	{
@@ -43,7 +54,6 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	}
 	double now = GetWorld()->GetTimeSeconds();
 	UE_LOG(LogTemp, Display, TEXT("Rotation: %s"), *CurrentRotation.ToString());
-	UE_LOG(LogTemp, Display, TEXT("Time: %.5f"), now);
-	// ...
+	UE_LOG(LogTemp, Display, TEXT("Time: %.5f"), now); */
 }
 
