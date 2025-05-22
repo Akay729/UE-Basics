@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/SceneComponent.h"
+#include "CollisionQueryParams.h"
 #include "Grabber.generated.h"
 
 
@@ -26,6 +27,7 @@ public:
 private:
 	double now;
 	float dmg = 5;
+	FCollisionQueryParams Params;
 
 	UPROPERTY(EditAnywhere)
 	float Distance = 100;
@@ -34,6 +36,6 @@ private:
 	void PrintDamagePlusFive_ByReference(float& Damage);
 	void PrintDamage_ByReference(const float& Damage); //usando const la varibile non viene cambiata e deve essere di tipo const
 	void SweepTracer();
-	void LineTracer();
+	void LineTracer(FVector& StartPoint, FVector& EndPoint);
 	void OldSolution();
 };

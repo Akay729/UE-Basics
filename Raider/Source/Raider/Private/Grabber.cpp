@@ -4,6 +4,10 @@
 #include "Grabber.h"
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
+#include "CollisionQueryParams.h"
+#include "Engine/HitResult.h"
+
+#define ECC_Grabber ECollisionChannel::ECC_GameTraceChannel1
 
 // Sets default values for this component's properties
 UGrabber::UGrabber()
@@ -28,7 +32,9 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	
+	FVector Start = GetOwner()->GetActorLocation();
+	FVector End = Start + GetForwardVector()*Distance;
+	LineTracer(Start, End);
 	//PrintDamage(dmg);
 
 
@@ -50,16 +56,27 @@ void UGrabber::PrintDamagePlusFive_ByReference(float& Damage)
 	UE_LOG(LogTemp, Display, TEXT("Actor: %s | Damage (ref): %f"), *ActorName, Damage);
 }
 
-void UGrabber::LineTracer()
+void UGrabber::LineTracer(FVector& StartPoint, FVector& EndPoint)
 {
-	FVector Start = GetOwner()->GetActorLocation();
-	FVector End = Start + GetForwardVector()*Distance;
-	DrawDebugLine(GetWorld(),Start,End,FColor::Green);
+	
+	FHitResult HitResult;
+	// FCollisionQueryParams Params;
+	Params.AddIgnoredActor(GetOwner());
+
+	DrawDebugLine(GetWorld(),StartPoint,EndPoint,FColor::Green);
+	bool isHit = GetWorld()->LineTraceSingleByChannel(HitResult, StartPoint, EndPoint, ECC_Grabber, Params,FCollisionResponseParams());
+	
+	if (isHit)
+	{
+		UE_LOG(LogTemp, Display, TEXT("Obeject Hit: %s !"), *HitResult.GetActor()->GetName());
+		/* code */
+	}
+	
 }
 
 void UGrabber::SweepTracer()
 {
-	
+
 }
 
 void UGrabber::OldSolution()
