@@ -28,19 +28,45 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	
+	//PrintDamage(dmg);
+
+
+}
+
+// Metodo che riceve il danno come copia (non modifica il valore originale)
+void UGrabber::PrintDamagePlusFive_ByValue(float Damage)
+{
+	FString ActorName = GetOwner()->GetActorNameOrLabel();
+	Damage += 5;
+	UE_LOG(LogTemp, Display, TEXT("Actor: %s | Damage (copy): %f"), *ActorName, Damage);
+}
+
+// Metodo che riceve il danno per riferimento (modifica il valore originale)
+void UGrabber::PrintDamagePlusFive_ByReference(float& Damage)
+{
+	FString ActorName = GetOwner()->GetActorNameOrLabel();
+	Damage += 5;
+	UE_LOG(LogTemp, Display, TEXT("Actor: %s | Damage (ref): %f"), *ActorName, Damage);
+}
+
+void UGrabber::LineTracer()
+{
 	FVector Start = GetOwner()->GetActorLocation();
 	FVector End = Start + GetForwardVector()*Distance;
+	DrawDebugLine(GetWorld(),Start,End,FColor::Green);
+}
 
+void UGrabber::SweepTracer()
+{
+	
+}
+
+void UGrabber::OldSolution()
+{
 /* 	FRotator ComponertRotation = GetComponentRotation();
 	FVector Forward = ComponentRotation.Vector();
 	End += Forward * 100;  */
-
-
-	DrawDebugLine(GetWorld(),Start,End,FColor::Green);
-
-
-
-
 /* 	FRotator CurrentRotation = GetComponentRotation();
 	UWorld* World = GetWorld();
 	if(World)
@@ -56,4 +82,3 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	UE_LOG(LogTemp, Display, TEXT("Rotation: %s"), *CurrentRotation.ToString());
 	UE_LOG(LogTemp, Display, TEXT("Time: %.5f"), now); */
 }
-
