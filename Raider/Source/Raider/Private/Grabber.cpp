@@ -6,8 +6,9 @@
 #include "DrawDebugHelpers.h"
 #include "CollisionQueryParams.h"
 #include "Engine/HitResult.h"
+#include "CollisionShape.h"
 
-#define ECC_Grabber ECollisionChannel::ECC_GameTraceChannel1
+#define ECC_Grabber ECollisionChannel::ECC_GameTraceChannel2
 
 // Sets default values for this component's properties
 UGrabber::UGrabber()
@@ -24,6 +25,8 @@ UGrabber::UGrabber()
 void UGrabber::BeginPlay()
 {
 	Super::BeginPlay();
+	Params.AddIgnoredActor(GetOwner());
+	CollisionShape.MakeCapsule(Radius, HalfHeight);
 }
 
 
@@ -33,8 +36,9 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	FVector Start = GetOwner()->GetActorLocation();
+	FRotator Rot= GetOwner()->GetActorRotation(); 
 	FVector End = Start + GetForwardVector()*Distance;
-	LineTracer(Start, End);
+	SweepTracer(Start, End);
 	//PrintDamage(dmg);
 
 
@@ -56,27 +60,37 @@ void UGrabber::PrintDamagePlusFive_ByReference(float& Damage)
 	UE_LOG(LogTemp, Display, TEXT("Actor: %s | Damage (ref): %f"), *ActorName, Damage);
 }
 
-void UGrabber::LineTracer(FVector& StartPoint, FVector& EndPoint)
+void UGrabber::LineTracer(FVector StartPoint, FVector EndPoint)
 {
-	
 	FHitResult HitResult;
-	// FCollisionQueryParams Params;
-	Params.AddIgnoredActor(GetOwner());
-
 	DrawDebugLine(GetWorld(),StartPoint,EndPoint,FColor::Green);
-	bool isHit = GetWorld()->LineTraceSingleByChannel(HitResult, StartPoint, EndPoint, ECC_Grabber, Params,FCollisionResponseParams());
+	bool isHit = GetWorld()->LineTraceSingleByChannel(
+		HitResult,
+		StartPoint,
+		EndPoint,
+		ECC_Grabber,
+		Params, 
+		FCollisionResponseParams());
 	
 	if (isHit)
 	{
-		UE_LOG(LogTemp, Display, TEXT("Obeject Hit: %s !"), *HitResult.GetActor()->GetName());
-		/* code */
+		UE_LOG(LogTemp, Display, TEXT("Object Hit: %s !"), *HitResult.GetActor()->GetName());
 	}
-	
 }
 
-void UGrabber::SweepTracer()
+void UGrabber::SweepTracer(FVector StartPoint, FVector EndPoint)
 {
-
+	FHitResult HitResult;
+	DrawDebugLine(GetWorld(),StartPoint,EndPoint,FColor::Red);
+	DrawDebugCapsule(GetWorld(), StartPoint, HalfHeight, Radius, FQuat::Identity, FColor::Green);
+	// per indicare no rotation si usa FQuat::Identity
+	bool isHit = GetWorld()->SweepSingleByChannel(HitResult, StartPoint, EndPoint, FQuat::Identity, ECC_Grabber, CollisionShape, Params, FCollisionResponseParams());	// per indicare no rotation si usa FQuat::Identity
+	
+	if (isHit)
+	{
+		UE_LOG(LogTemp, Display, TEXT("Object Hit: %s !"), *HitResult.GetActor()->GetName());
+	}
+	
 }
 
 void UGrabber::OldSolution()
