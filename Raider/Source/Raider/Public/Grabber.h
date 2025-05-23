@@ -30,6 +30,8 @@ private:
 	float dmg = 5;
 	FCollisionQueryParams Params;
 	TArray<AActor*> IgnoredActors;
+	FCollisionShape CollisionShape;
+	FLinearColor TraceColor;
 	//FCollisionShape CollisionShape;
 
 	UPROPERTY(EditAnywhere)
@@ -45,6 +47,7 @@ private:
 	
 	void LineTracer(FVector StartPoint, FVector EndPoint);
 	void SweepTracer(FVector StartPoint, FVector EndPoint);
+	void SweepTracer2(FVector StartPoint, FVector EndPoint);
 	
 	void OldSolution();
 };

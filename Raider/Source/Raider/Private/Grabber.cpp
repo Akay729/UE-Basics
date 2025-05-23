@@ -29,6 +29,8 @@ void UGrabber::BeginPlay()
 	Super::BeginPlay();
 	Params.AddIgnoredActor(GetOwner());
 	IgnoredActors.Add(GetOwner()); 
+	CollisionShape = FCollisionShape::MakeCapsule(Radius, HalfHeight);
+	TraceColor = FLinearColor::Green;
 	
 	
 }
@@ -39,10 +41,10 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	FVector Start = GetOwner()->GetActorLocation();
-	//FRotator Rot= GetOwner()->GetActorRotation(); 
 	FVector End = Start + GetForwardVector()*Distance;
 	SweepTracer(Start, End);
 	//PrintDamage(dmg);
+
 
 
 }
@@ -67,14 +69,7 @@ void UGrabber::LineTracer(FVector StartPoint, FVector EndPoint)
 {
 	FHitResult HitResult;
 	DrawDebugLine(GetWorld(),StartPoint,EndPoint,FColor::Green);
-	bool isHit = GetWorld()->LineTraceSingleByChannel(
-		HitResult,
-		StartPoint,
-		EndPoint,
-		ECC_Grabber,
-		Params, 
-		FCollisionResponseParams());
-	
+	bool isHit = GetWorld()->LineTraceSingleByChannel(HitResult, StartPoint, EndPoint, ECC_Grabber,	Params, FCollisionResponseParams());
 	if (isHit)
 	{
 		UE_LOG(LogTemp, Display, TEXT("Object Hit: %s (LineTracer)!"), *HitResult.GetActor()->GetName());
@@ -83,17 +78,36 @@ void UGrabber::LineTracer(FVector StartPoint, FVector EndPoint)
 
 void UGrabber::SweepTracer(FVector StartPoint, FVector EndPoint)
 {
+	FHitResult HitResult;
+	DrawDebugLine(GetWorld(),StartPoint,EndPoint,FColor::Green);
+	bool isHit = GetWorld()->SweepSingleByChannel(HitResult, StartPoint, EndPoint, FQuat::Identity, ECC_Grabber, CollisionShape, Params, FCollisionResponseParams());
+	if (isHit)
+	{
+		FVector Extent = FVector(5.0f, 5.0f, 5.0f);
+		UE_LOG(LogTemp, Display, TEXT("Object Hit: %s (SweepTracer 1)!"), *HitResult.GetActor()->GetName());
+		DrawDebugSphere(GetWorld(), HitResult.Location, Radius, 16, FColor::Red, false, 0.0f);
+		DrawDebugBox(GetWorld(), HitResult.ImpactPoint, Extent, FQuat::Identity, FColor::Red, false, 0.0f);
+		DrawDebugSphere(GetWorld(), EndPoint, Radius, 16, FColor::Green, false, 0.0f);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Display, TEXT("No Hit!"));
+		DrawDebugSphere(GetWorld(), EndPoint, Radius, 16, FColor::Green, false);
+	}
+}
+
+void UGrabber::SweepTracer2(FVector StartPoint, FVector EndPoint)
+{
 	/*
 	Questa Funzione l'ho fatta solo perchè pensavo fosse neccessario nel tutorial 
 	ma siè rilevato qualcosa di molto più complesso, poco uso di ai e solo per banalita o cercare definizioni.
 	*/
 
 	FHitResult HitResult;
-	FCollisionShape CollisionShape = FCollisionShape::MakeCapsule(Radius, HalfHeight);
 	//CollisionShape.MakeCapsule(Radius, HalfHeight);
 	FRotator ComponertRotation = GetComponentRotation();
-	const FQuat OrientationQuat = ComponertRotation.Quaternion();
-	FLinearColor TraceColor = FLinearColor::Green;
+	//const FQuat OrientationQuat = ComponertRotation.Quaternion();
+	
 
  	UKismetSystemLibrary::CapsuleTraceSingle(
 		GetWorld(),
@@ -121,11 +135,11 @@ void UGrabber::SweepTracer(FVector StartPoint, FVector EndPoint)
 	
 	if (isHit)
 	{
-		UE_LOG(LogTemp, Display, TEXT("Object Hit: %s (SweepTracer)!"), *HitResult.GetActor()->GetName());
+		UE_LOG(LogTemp, Display, TEXT("Object Hit: %s (SweepTracer 2)!"), *HitResult.GetActor()->GetName());
 	}
 	else
 	{
-		UE_LOG(LogTemp, Display, TEXT("Nothing!"));
+		UE_LOG(LogTemp, Display, TEXT("No Hit!"));
 	}
 	
 }
