@@ -29,12 +29,12 @@ private:
 	double now;
 	float dmg = 5;
 	FCollisionQueryParams Params;
-	FCollisionShape CollisionShape;
+	//FCollisionShape CollisionShape;
 
 	UPROPERTY(EditAnywhere)
-	float Distance = 100;
+	float Distance = 500;
 	UPROPERTY(EditAnywhere)
-	float Radius = 100;
+	float Radius = 50;
 	UPROPERTY(EditAnywhere)
 	float HalfHeight = 100;
 	

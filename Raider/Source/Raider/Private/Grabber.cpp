@@ -7,7 +7,9 @@
 #include "CollisionQueryParams.h"
 #include "Engine/HitResult.h"
 #include "CollisionShape.h"
+#include "Kismet/KismetSystemLibrary.h"
 
+//Questo lo si puo determinare dalo file DefaultEngine.ini nella cartella config
 #define ECC_Grabber ECollisionChannel::ECC_GameTraceChannel2
 
 // Sets default values for this component's properties
@@ -20,15 +22,14 @@ UGrabber::UGrabber()
 	// ...
 }
 
-
 // Called when the game starts
 void UGrabber::BeginPlay()
 {
 	Super::BeginPlay();
 	Params.AddIgnoredActor(GetOwner());
-	CollisionShape.MakeCapsule(Radius, HalfHeight);
+	
+	
 }
-
 
 // Called every frame
 void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -36,7 +37,7 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	FVector Start = GetOwner()->GetActorLocation();
-	FRotator Rot= GetOwner()->GetActorRotation(); 
+	//FRotator Rot= GetOwner()->GetActorRotation(); 
 	FVector End = Start + GetForwardVector()*Distance;
 	SweepTracer(Start, End);
 	//PrintDamage(dmg);
@@ -74,21 +75,36 @@ void UGrabber::LineTracer(FVector StartPoint, FVector EndPoint)
 	
 	if (isHit)
 	{
-		UE_LOG(LogTemp, Display, TEXT("Object Hit: %s !"), *HitResult.GetActor()->GetName());
+		UE_LOG(LogTemp, Display, TEXT("Object Hit: %s (LineTracer)!"), *HitResult.GetActor()->GetName());
 	}
 }
 
 void UGrabber::SweepTracer(FVector StartPoint, FVector EndPoint)
 {
+	/*
+	Questa Funzione l'ho fatta solo perchè pensavo fosse neccessario nel tutorial 
+	ma siè rilevato qualcosa di molto più complesso, poco uso di ai e solo per banalita o cercare definizioni.
+	*/
+
 	FHitResult HitResult;
+	FCollisionShape CollisionShape = FCollisionShape::MakeCapsule(Radius, HalfHeight);
+	//CollisionShape.MakeCapsule(Radius, HalfHeight);
+	FRotator ComponertRotation = GetComponentRotation();
+
 	DrawDebugLine(GetWorld(),StartPoint,EndPoint,FColor::Red);
-	DrawDebugCapsule(GetWorld(), StartPoint, HalfHeight, Radius, FQuat::Identity, FColor::Green);
+	DrawDebugCapsule(GetWorld(), StartPoint, HalfHeight, Radius, ComponertRotation.Quaternion(), FColor::Green);
+	
+	
 	// per indicare no rotation si usa FQuat::Identity
-	bool isHit = GetWorld()->SweepSingleByChannel(HitResult, StartPoint, EndPoint, FQuat::Identity, ECC_Grabber, CollisionShape, Params, FCollisionResponseParams());	// per indicare no rotation si usa FQuat::Identity
+	bool isHit = GetWorld()->SweepSingleByChannel(HitResult, StartPoint, EndPoint,FQuat::Identity, ECC_Grabber, CollisionShape, Params, FCollisionResponseParams());	// per indicare no rotation si usa FQuat::Identity
 	
 	if (isHit)
 	{
-		UE_LOG(LogTemp, Display, TEXT("Object Hit: %s !"), *HitResult.GetActor()->GetName());
+		UE_LOG(LogTemp, Display, TEXT("Object Hit: %s (SweepTracer)!"), *HitResult.GetActor()->GetName());
+	}
+	else
+	{
+		UE_LOG(LogTemp, Display, TEXT("Nothing!"));
 	}
 	
 }
