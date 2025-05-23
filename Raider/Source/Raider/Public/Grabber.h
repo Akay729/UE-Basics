@@ -29,6 +29,7 @@ private:
 	double now;
 	float dmg = 5;
 	FCollisionQueryParams Params;
+	TArray<AActor*> IgnoredActors;
 	//FCollisionShape CollisionShape;
 
 	UPROPERTY(EditAnywhere)

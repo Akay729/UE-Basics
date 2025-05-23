@@ -9,6 +9,7 @@
 #include "CollisionShape.h"
 #include "Kismet/KismetSystemLibrary.h"
 
+
 //Questo lo si puo determinare dalo file DefaultEngine.ini nella cartella config
 #define ECC_Grabber ECollisionChannel::ECC_GameTraceChannel2
 
@@ -27,6 +28,7 @@ void UGrabber::BeginPlay()
 {
 	Super::BeginPlay();
 	Params.AddIgnoredActor(GetOwner());
+	IgnoredActors.Add(GetOwner()); 
 	
 	
 }
@@ -90,10 +92,29 @@ void UGrabber::SweepTracer(FVector StartPoint, FVector EndPoint)
 	FCollisionShape CollisionShape = FCollisionShape::MakeCapsule(Radius, HalfHeight);
 	//CollisionShape.MakeCapsule(Radius, HalfHeight);
 	FRotator ComponertRotation = GetComponentRotation();
+	const FQuat OrientationQuat = ComponertRotation.Quaternion();
+	FLinearColor TraceColor = FLinearColor::Green;
 
+ 	UKismetSystemLibrary::CapsuleTraceSingle(
+		GetWorld(),
+		StartPoint,
+		EndPoint,
+		Radius,
+		HalfHeight,
+		UEngineTypes::ConvertToTraceType(ECC_Grabber),
+		false,
+		IgnoredActors,
+		EDrawDebugTrace::ForOneFrame,
+		HitResult,
+		true,
+		FLinearColor::Green,                    // Trace color
+    	FLinearColor::Red,                      // Hit color
+    	1.0f
+	);
+	//UKismetSystemLibrary::DrawDebugCapsule(GetWorld(), StartPoint, HalfHeight, Radius, ComponertRotation, TraceColor.ToFColor(true), false, 0.f);
 	DrawDebugLine(GetWorld(),StartPoint,EndPoint,FColor::Red);
-	DrawDebugCapsule(GetWorld(), StartPoint, HalfHeight, Radius, ComponertRotation.Quaternion(), FColor::Green);
-	
+	//DrawDebugCapsule(GetWorld(), StartPoint, HalfHeight, Radius, ComponertRotation.Quaternion(), FColor::Green);
+
 	
 	// per indicare no rotation si usa FQuat::Identity
 	bool isHit = GetWorld()->SweepSingleByChannel(HitResult, StartPoint, EndPoint,FQuat::Identity, ECC_Grabber, CollisionShape, Params, FCollisionResponseParams());	// per indicare no rotation si usa FQuat::Identity
