@@ -8,6 +8,7 @@
 #include "Engine/HitResult.h"
 #include "CollisionShape.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "PhysicsEngine/PhysicsHandleComponent.h"
 
 
 //Questo lo si puo determinare dalo file DefaultEngine.ini nella cartella config
@@ -27,11 +28,24 @@ UGrabber::UGrabber()
 void UGrabber::BeginPlay()
 {
 	Super::BeginPlay();
+
 	Params.AddIgnoredActor(GetOwner());
 	IgnoredActors.Add(GetOwner()); 
-	CollisionShape = FCollisionShape::MakeCapsule(Radius, HalfHeight);
+	CollisionShape = FCollisionShape::MakeSphere(Radius);
 	TraceColor = FLinearColor::Green;
+
+	UPhysicsHandleComponent* PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
+	if (PhysicsHandle == nullptr)
+	{
+		UE_LOG(LogTemp, Display, TEXT("nome: %s"), *PhysicsHandle->GetName() );
+	}
+	else
+	{
+		UE_LOG(LogTemp, Display, TEXT("PhysicsHandleComponent is missing"));
+	}
 	
+	
+
 	
 }
 
@@ -40,9 +54,15 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	FVector Start = GetOwner()->GetActorLocation();
-	FVector End = Start + GetForwardVector()*Distance;
-	SweepTracer(Start, End);
+	// FVector Start = GetOwner()->GetActorLocation();
+	// FVector End = Start + GetForwardVector()*Distance;
+	// SweepTracer(Start, End);
+	
+	UPhysicsHandleComponent* PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
+	if (PhysicsHandle == nullptr) {return;}
+
+	FVector TagetLocation = GetComponentLocation() + GetForwardVector() * 200.0f;
+	PhysicsHandle->SetTargetLocationAndRotation(TagetLocation, GetComponentRotation());
 	//PrintDamage(dmg);
 
 
@@ -85,9 +105,9 @@ void UGrabber::SweepTracer(FVector StartPoint, FVector EndPoint)
 	{
 		FVector Extent = FVector(5.0f, 5.0f, 5.0f);
 		UE_LOG(LogTemp, Display, TEXT("Object Hit: %s (SweepTracer 1)!"), *HitResult.GetActor()->GetName());
-		DrawDebugSphere(GetWorld(), HitResult.Location, Radius, 16, FColor::Red, false, 0.0f);
-		DrawDebugBox(GetWorld(), HitResult.ImpactPoint, Extent, FQuat::Identity, FColor::Red, false, 0.0f);
-		DrawDebugSphere(GetWorld(), EndPoint, Radius, 16, FColor::Green, false, 0.0f);
+		DrawDebugSphere(GetWorld(), HitResult.Location, Radius, 16, FColor::Yellow, false, 0.0f);
+		DrawDebugBox(GetWorld(), HitResult.ImpactPoint, Extent, FQuat::Identity, FColor::Yellow, false, 0.0f);
+		//DrawDebugSphere(GetWorld(), EndPoint, Radius, 16, FColor::Green, false, 0.0f);
 	}
 	else
 	{
@@ -142,6 +162,54 @@ void UGrabber::SweepTracer2(FVector StartPoint, FVector EndPoint)
 		UE_LOG(LogTemp, Display, TEXT("No Hit!"));
 	}
 	
+}
+
+void UGrabber::Grab()
+{
+	UPhysicsHandleComponent* PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
+	if (PhysicsHandle == nullptr) {return;}
+
+	FHitResult HitResult;
+	FVector Start = GetOwner()->GetActorLocation();
+	FVector End = Start + GetForwardVector()*Distance;
+
+	bool isHit = GetWorld()->SweepSingleByChannel(
+		HitResult,
+		Start,
+		End,
+		FQuat::Identity,
+		ECC_Grabber,
+		CollisionShape,
+		Params,
+		FCollisionResponseParams()
+	);
+
+	if (isHit)
+	{
+		FVector Extent = FVector(2.5f, 2.5f, 2.5f);
+		DrawDebugSphere(GetWorld(), HitResult.Location, Radius, 12, FColor::Red, false, 5.0f);
+		DrawDebugBox(GetWorld(), HitResult.ImpactPoint, Extent, FQuat::Identity, FColor::Yellow, false, 5.0f);
+
+		PhysicsHandle->GrabComponentAtLocationWithRotation(
+			HitResult.GetComponent(),
+			NAME_None,
+			HitResult.ImpactPoint,
+			GetComponentRotation()
+		);
+	}
+	else
+	{
+		DrawDebugSphere(GetWorld(), End, Radius, 12, FColor::Blue, false, 5.0f);
+	}
+	
+	
+	//UE_LOG(LogTemp, Display, TEXT("Grab: Nothing found"));
+}
+void UGrabber::Release()
+{
+
+	//UPhysicsHandleComponent::ReleaseComponent();
+	UE_LOG(LogTemp, Display, TEXT("Release"));
 }
 
 void UGrabber::OldSolution()

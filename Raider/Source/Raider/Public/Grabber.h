@@ -25,6 +25,13 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+public:
+	UFUNCTION(BlueprintCallable)
+	void Grab();
+	UFUNCTION(BlueprintCallable)
+	void Release();
+	
 private:
 	double now;
 	float dmg = 5;
@@ -40,7 +47,7 @@ private:
 	float Radius = 50;
 	UPROPERTY(EditAnywhere)
 	float HalfHeight = 100;
-	
+
 	void PrintDamagePlusFive_ByValue(float Damage);
 	void PrintDamagePlusFive_ByReference(float& Damage);
 	void PrintDamage_ByReference(const float& Damage); //usando const la varibile non viene cambiata e deve essere di tipo const
