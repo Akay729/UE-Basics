@@ -32,7 +32,7 @@ void UGrabber::BeginPlay()
 	Params.AddIgnoredActor(GetOwner());
 	IgnoredActors.Add(GetOwner()); 
 	CollisionShape = FCollisionShape::MakeSphere(Radius);
-	TraceColor = FLinearColor::Green;
+	//TraceColor = FLinearColor::Green;
 
 	//Check if PhysicsHandleComponent is part of the actor. 
 	UPhysicsHandleComponent* PhysicsHandle = GetPhysicsHandle();
@@ -148,6 +148,23 @@ void UGrabber::CapsuleSweepTracer(FVector StartPoint, FVector EndPoint)
 	
 }
 
+bool UGrabber::GetGrabbableInReach(FHitResult& OutHitResult)
+{
+	CollisionShape = FCollisionShape::MakeSphere(Radius);
+	FVector Start = GetOwner()->GetActorLocation();
+	FVector End = Start + GetForwardVector() * Distance;
+	
+	return GetWorld()->SweepSingleByChannel(
+		OutHitResult, 
+		Start, 
+		End, 
+		FQuat::Identity, 
+		ECC_Grabber, 
+		CollisionShape, 
+		Params, 
+		FCollisionResponseParams());
+}
+
 // Grab Actor
 void UGrabber::Grab()
 {
@@ -155,13 +172,10 @@ void UGrabber::Grab()
 	if (!HasPhysicsHandle()) {return;}
 	UPhysicsHandleComponent* PhysicsHandle = GetPhysicsHandle();
 
+	// mi servono per più funzioni
+	
 	FHitResult HitResult;
-	FVector Start = GetOwner()->GetActorLocation();
-	FVector End = Start + GetForwardVector()*Distance;
-
-	bool isHit = GetWorld()->SweepSingleByChannel(HitResult, Start, End, FQuat::Identity, ECC_Grabber, CollisionShape, Params, FCollisionResponseParams());
-
-	if (isHit)
+	if (GetGrabbableInReach(HitResult))
 	{
 		FVector Extent = FVector(2.5f, 2.5f, 2.5f);
 		DrawDebugSphere(GetWorld(), HitResult.Location, Radius, 12, FColor::Red, false, 5.0f);
@@ -178,7 +192,7 @@ void UGrabber::Grab()
 	}
 	else
 	{
-		DrawDebugSphere(GetWorld(), End, Radius, 12, FColor::Blue, false, 5.0f);
+		//DrawDebugSphere(GetWorld(), End, Radius, 12, FColor::Blue, false, 5.0f);
 		//UE_LOG(LogTemp, Display, TEXT("Grab: Nothing found"));
 	}
 }
@@ -186,11 +200,10 @@ void UGrabber::Grab()
 // Release Actor Grabbed
 void UGrabber::Release()
 {
-	
 	if (!HasPhysicsHandle()) {return;}
-	PhysicsHandle = GetPhysicsHandle();
-	
+	UPhysicsHandleComponent* PhysicsHandle = GetPhysicsHandle();
 	UPrimitiveComponent* GrabbedComponent = PhysicsHandle->GetGrabbedComponent();
+	
 	if (GrabbedComponent != nullptr)
 	{
 		GrabbedComponent->WakeAllRigidBodies();

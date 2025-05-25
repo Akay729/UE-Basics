@@ -44,8 +44,10 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	float Distance = 500;
+
 	UPROPERTY(EditAnywhere)
 	float Radius = 50;
+
 	UPROPERTY(EditAnywhere)
 	float HalfHeight = 100;
 
@@ -58,6 +60,7 @@ private:
 	void CapsuleSweepTracer(FVector StartPoint, FVector EndPoint);
 	bool HasPhysicsHandle() const;
 	UPhysicsHandleComponent* GetPhysicsHandle() const;
+	bool GetGrabbableInReach(FHitResult& OutHitResult);
 	
 	void OldSolution();
 };
