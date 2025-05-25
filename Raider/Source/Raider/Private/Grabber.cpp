@@ -34,8 +34,10 @@ void UGrabber::BeginPlay()
 	CollisionShape = FCollisionShape::MakeSphere(Radius);
 	TraceColor = FLinearColor::Green;
 
-	UPhysicsHandleComponent* PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
-	if (PhysicsHandle == nullptr)
+	//Check if PhysicsHandleComponent is part of the actor. 
+	UPhysicsHandleComponent* PhysicsHandle = GetPhysicsHandle();
+
+	if (HasPhysicsHandle())
 	{
 		UE_LOG(LogTemp, Display, TEXT("nome: %s"), *PhysicsHandle->GetName() );
 	}
@@ -56,35 +58,16 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 
 	// FVector Start = GetOwner()->GetActorLocation();
 	// FVector End = Start + GetForwardVector()*Distance;
-	// SweepTracer(Start, End);
-	
-	UPhysicsHandleComponent* PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
-	if (PhysicsHandle == nullptr) {return;}
-
-	FVector TagetLocation = GetComponentLocation() + GetForwardVector() * 200.0f;
-	PhysicsHandle->SetTargetLocationAndRotation(TagetLocation, GetComponentRotation());
-	//PrintDamage(dmg);
-
-
-
+	// SphereSweepTracer(Start, End);
+	// PrintDamage(dmg);
+	if (!HasPhysicsHandle()) {return;}
+	UPhysicsHandleComponent* PhysicsHandle =GetPhysicsHandle();
+	if( PhysicsHandle->GetGrabbedComponent()!= nullptr)
+	{
+		FVector TagetLocation = GetComponentLocation() + GetForwardVector() * 200.0f;
+		PhysicsHandle->SetTargetLocationAndRotation(TagetLocation, GetComponentRotation());
+	}	
 }
-
-// Metodo che riceve il danno come copia (non modifica il valore originale)
-void UGrabber::PrintDamagePlusFive_ByValue(float Damage)
-{
-	FString ActorName = GetOwner()->GetActorNameOrLabel();
-	Damage += 5;
-	UE_LOG(LogTemp, Display, TEXT("Actor: %s | Damage (copy): %f"), *ActorName, Damage);
-}
-
-// Metodo che riceve il danno per riferimento (modifica il valore originale)
-void UGrabber::PrintDamagePlusFive_ByReference(float& Damage)
-{
-	FString ActorName = GetOwner()->GetActorNameOrLabel();
-	Damage += 5;
-	UE_LOG(LogTemp, Display, TEXT("Actor: %s | Damage (ref): %f"), *ActorName, Damage);
-}
-
 void UGrabber::LineTracer(FVector StartPoint, FVector EndPoint)
 {
 	FHitResult HitResult;
@@ -96,7 +79,7 @@ void UGrabber::LineTracer(FVector StartPoint, FVector EndPoint)
 	}
 }
 
-void UGrabber::SweepTracer(FVector StartPoint, FVector EndPoint)
+void UGrabber::SphereSweepTracer(FVector StartPoint, FVector EndPoint)
 {
 	FHitResult HitResult;
 	DrawDebugLine(GetWorld(),StartPoint,EndPoint,FColor::Green);
@@ -104,7 +87,7 @@ void UGrabber::SweepTracer(FVector StartPoint, FVector EndPoint)
 	if (isHit)
 	{
 		FVector Extent = FVector(5.0f, 5.0f, 5.0f);
-		UE_LOG(LogTemp, Display, TEXT("Object Hit: %s (SweepTracer 1)!"), *HitResult.GetActor()->GetName());
+		UE_LOG(LogTemp, Display, TEXT("SphereSweepTracer Object Hit: %s "), *HitResult.GetActor()->GetName());
 		DrawDebugSphere(GetWorld(), HitResult.Location, Radius, 16, FColor::Yellow, false, 0.0f);
 		DrawDebugBox(GetWorld(), HitResult.ImpactPoint, Extent, FQuat::Identity, FColor::Yellow, false, 0.0f);
 		//DrawDebugSphere(GetWorld(), EndPoint, Radius, 16, FColor::Green, false, 0.0f);
@@ -116,11 +99,12 @@ void UGrabber::SweepTracer(FVector StartPoint, FVector EndPoint)
 	}
 }
 
-void UGrabber::SweepTracer2(FVector StartPoint, FVector EndPoint)
+void UGrabber::CapsuleSweepTracer(FVector StartPoint, FVector EndPoint)
 {
 	/*
 	Questa Funzione l'ho fatta solo perchè pensavo fosse neccessario nel tutorial 
-	ma siè rilevato qualcosa di molto più complesso, poco uso di ai e solo per banalita o cercare definizioni.
+	ma siè rilevato qualcosa di molto più complesso. 
+	Ero vicino alla soluzione ma non avevo capito bene cosa facesse sweep
 	*/
 
 	FHitResult HitResult;
@@ -155,7 +139,7 @@ void UGrabber::SweepTracer2(FVector StartPoint, FVector EndPoint)
 	
 	if (isHit)
 	{
-		UE_LOG(LogTemp, Display, TEXT("Object Hit: %s (SweepTracer 2)!"), *HitResult.GetActor()->GetName());
+		UE_LOG(LogTemp, Display, TEXT("CapsuleSweepTracer Object Hit: %s "), *HitResult.GetActor()->GetName());
 	}
 	else
 	{
@@ -164,25 +148,18 @@ void UGrabber::SweepTracer2(FVector StartPoint, FVector EndPoint)
 	
 }
 
+// Grab Actor
 void UGrabber::Grab()
 {
-	UPhysicsHandleComponent* PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
-	if (PhysicsHandle == nullptr) {return;}
+	// Check PhysicsHandleComponet
+	if (!HasPhysicsHandle()) {return;}
+	UPhysicsHandleComponent* PhysicsHandle = GetPhysicsHandle();
 
 	FHitResult HitResult;
 	FVector Start = GetOwner()->GetActorLocation();
 	FVector End = Start + GetForwardVector()*Distance;
 
-	bool isHit = GetWorld()->SweepSingleByChannel(
-		HitResult,
-		Start,
-		End,
-		FQuat::Identity,
-		ECC_Grabber,
-		CollisionShape,
-		Params,
-		FCollisionResponseParams()
-	);
+	bool isHit = GetWorld()->SweepSingleByChannel(HitResult, Start, End, FQuat::Identity, ECC_Grabber, CollisionShape, Params, FCollisionResponseParams());
 
 	if (isHit)
 	{
@@ -190,8 +167,10 @@ void UGrabber::Grab()
 		DrawDebugSphere(GetWorld(), HitResult.Location, Radius, 12, FColor::Red, false, 5.0f);
 		DrawDebugBox(GetWorld(), HitResult.ImpactPoint, Extent, FQuat::Identity, FColor::Yellow, false, 5.0f);
 
+		UPrimitiveComponent* HitComponent = HitResult.GetComponent();
+		HitComponent->WakeAllRigidBodies();
 		PhysicsHandle->GrabComponentAtLocationWithRotation(
-			HitResult.GetComponent(),
+			HitComponent,
 			NAME_None,
 			HitResult.ImpactPoint,
 			GetComponentRotation()
@@ -200,18 +179,62 @@ void UGrabber::Grab()
 	else
 	{
 		DrawDebugSphere(GetWorld(), End, Radius, 12, FColor::Blue, false, 5.0f);
+		//UE_LOG(LogTemp, Display, TEXT("Grab: Nothing found"));
 	}
-	
-	
-	//UE_LOG(LogTemp, Display, TEXT("Grab: Nothing found"));
 }
+
+// Release Actor Grabbed
 void UGrabber::Release()
 {
-
-	//UPhysicsHandleComponent::ReleaseComponent();
-	UE_LOG(LogTemp, Display, TEXT("Release"));
+	
+	if (!HasPhysicsHandle()) {return;}
+	PhysicsHandle = GetPhysicsHandle();
+	
+	UPrimitiveComponent* GrabbedComponent = PhysicsHandle->GetGrabbedComponent();
+	if (GrabbedComponent != nullptr)
+	{
+		GrabbedComponent->WakeAllRigidBodies();
+		PhysicsHandle->ReleaseComponent();
+	}
+	UE_LOG(LogTemp, Display, TEXT("Release:"));
 }
 
+// Get Physics Handle if component is present otherwise give a warning that "PhysicsHandleComponent" is missing
+UPhysicsHandleComponent* UGrabber::GetPhysicsHandle() const 
+{
+	UPhysicsHandleComponent* Result = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
+	if (Result == nullptr) { UE_LOG(LogTemp, Warning, TEXT("PhysicsHandleComponent is missing"));}
+	return Result;
+}
+
+// Check if GetPhysicsHandle have a retunr a nullptr or a component
+bool UGrabber::HasPhysicsHandle() const
+{
+	//UPhysicsHandleComponent* PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
+	UPhysicsHandleComponent* PhysicsHandle = GetPhysicsHandle();
+	return PhysicsHandle != nullptr;
+}
+
+///////////// OLD CODE /////////////
+
+// Metodo che riceve il danno come copia (non modifica il valore originale)
+void UGrabber::PrintDamagePlusFive_ByValue(float Damage)
+{
+	FString ActorName = GetOwner()->GetActorNameOrLabel();
+	Damage += 5;
+	UE_LOG(LogTemp, Display, TEXT("Actor: %s | Damage (copy): %f"), *ActorName, Damage);
+}
+
+// Metodo che riceve il danno per riferimento (modifica il valore originale)
+void UGrabber::PrintDamagePlusFive_ByReference(float& Damage)
+{
+	FString ActorName = GetOwner()->GetActorNameOrLabel();
+	Damage += 5;
+	UE_LOG(LogTemp, Display, TEXT("Actor: %s | Damage (ref): %f"), *ActorName, Damage);
+}
+
+
+// Old solution for the lesson
 void UGrabber::OldSolution()
 {
 /* 	FRotator ComponertRotation = GetComponentRotation();

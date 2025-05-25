@@ -6,6 +6,7 @@
 #include "Components/SceneComponent.h"
 #include "CollisionQueryParams.h"
 #include "CollisionShape.h"
+#include "PhysicsEngine/PhysicsHandleComponent.h"
 #include "Grabber.generated.h"
 
 
@@ -31,7 +32,7 @@ public:
 	void Grab();
 	UFUNCTION(BlueprintCallable)
 	void Release();
-	
+
 private:
 	double now;
 	float dmg = 5;
@@ -53,8 +54,10 @@ private:
 	void PrintDamage_ByReference(const float& Damage); //usando const la varibile non viene cambiata e deve essere di tipo const
 	
 	void LineTracer(FVector StartPoint, FVector EndPoint);
-	void SweepTracer(FVector StartPoint, FVector EndPoint);
-	void SweepTracer2(FVector StartPoint, FVector EndPoint);
+	void SphereSweepTracer(FVector StartPoint, FVector EndPoint);
+	void CapsuleSweepTracer(FVector StartPoint, FVector EndPoint);
+	bool HasPhysicsHandle() const;
+	UPhysicsHandleComponent* GetPhysicsHandle() const;
 	
 	void OldSolution();
 };
