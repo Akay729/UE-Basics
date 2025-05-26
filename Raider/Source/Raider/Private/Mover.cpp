@@ -20,7 +20,7 @@ void UMover::BeginPlay()
 {
 	Super::BeginPlay();
 	MyFloat = 29;
-	OrginalLocation =  GetOwner()->GetActorLocation();	
+	OriginalLocation = GetOwner()->GetActorLocation();	
 }
 
 
@@ -28,7 +28,37 @@ void UMover::BeginPlay()
 void UMover::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-/* 	AActor* Owner = GetOwner();
+
+	DoorMovemnt(ShouldMove, DeltaTime);
+}
+
+void  UMover::DoorMovemnt(bool ShouldOpen, float DeltaTime)
+{
+	FVector CurrentLocation = GetOwner()->GetActorLocation();
+	FVector TargetLocation;
+	UE_LOG(LogTemp, Display, TEXT("Actor OriginalLocation %s"), *OriginalLocation.ToString());
+	if (ShouldOpen)
+	{
+		TargetLocation = OriginalLocation + MoveOffset;
+	}
+	else
+	{
+		TargetLocation = OriginalLocation;
+	}
+	UE_LOG(LogTemp, Display, TEXT("Actor TargetLocation %s"), *TargetLocation.ToString());
+	float Speed = FVector::Distance(CurrentLocation, TargetLocation)/TimeToMove;
+	FVector NewLocation = FMath::VInterpConstantTo(CurrentLocation, TargetLocation, DeltaTime, 100);
+	GetOwner()->SetActorLocation(NewLocation);
+}
+
+void UMover::SetShouldMove(bool NewShouldMove)
+{
+	ShouldMove = NewShouldMove;
+}
+
+void UMover::OldSolution()
+{
+	/* 	AActor* Owner = GetOwner();
 	FString name = Owner->GetActorNameOrLabel();
 	FVector CurrentLocation = Owner->GetActorLocation();
 
@@ -41,14 +71,4 @@ void UMover::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponent
 	UE_LOG(LogTemp, Display, TEXT("Current Locaiton: %s "), *CurrentLocation.ToString());
 	UE_LOG(LogTemp, Display, TEXT("Componet address: %s "), *name); // *name è un scorciatoia per ottenere Fstring in TCHAR*
 	 */
-	if (Move)
-	{
-		FVector CurrentLocation = GetOwner()->GetActorLocation();
-		FVector TargetLocation = OrginalLocation + MoveOffset;
-		float Speed = FVector::Distance(CurrentLocation, TargetLocation)/TimeToMove;
-		FVector NewLocation = FMath::VInterpConstantTo(CurrentLocation, TargetLocation, DeltaTime, 50);
-		GetOwner()->SetActorLocation(NewLocation);
-	}
-
 }
-

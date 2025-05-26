@@ -23,14 +23,35 @@ void UTriggerComponent::BeginPlay()
 void UTriggerComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
     Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-    TArray<AActor*> Actors;
+    AActor* Actor = GetAcceptableActor();
+	if (Actor != nullptr)
+	{
+		Mover->SetShouldMove(true);
+		UE_LOG(LogTemp, Display, TEXT("Unlocking!"));
+	}
+	else
+	{
+		Mover->SetShouldMove(false);
+		UE_LOG(LogTemp, Display, TEXT("Locking!"));
+	}
+}
+
+AActor* UTriggerComponent::GetAcceptableActor() const
+{
+	TArray<AActor*> Actors;
 	GetOverlappingActors(Actors);
 	for (AActor* Actor: Actors)
 	{
 		if (Actor->ActorHasTag(key))
 		{
 			UE_LOG(LogTemp, Display, TEXT("chiave corretta"));
-			return;
+			return Actor;
 		}
 	}
+	return nullptr;
+}
+
+void UTriggerComponent::SetMover(UMover* NewMover)
+{
+	Mover = NewMover;
 }
