@@ -210,6 +210,7 @@ void UGrabber::Release()
 		PhysicsHandle->ReleaseComponent();
 	}
 	UE_LOG(LogTemp, Display, TEXT("Release:"));
+
 }
 
 // Get Physics Handle if component is present otherwise give a warning that "PhysicsHandleComponent" is missing
@@ -225,6 +226,7 @@ bool UGrabber::HasPhysicsHandle() const
 {
 	//UPhysicsHandleComponent* PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
 	UPhysicsHandleComponent* PhysicsHandle = GetPhysicsHandle();
+
 	return PhysicsHandle != nullptr;
 }
 
@@ -244,8 +246,8 @@ void UGrabber::PrintDamagePlusFive_ByReference(float& Damage)
 	FString ActorName = GetOwner()->GetActorNameOrLabel();
 	Damage += 5;
 	UE_LOG(LogTemp, Display, TEXT("Actor: %s | Damage (ref): %f"), *ActorName, Damage);
-}
 
+}
 
 // Old solution for the lesson
 void UGrabber::OldSolution()

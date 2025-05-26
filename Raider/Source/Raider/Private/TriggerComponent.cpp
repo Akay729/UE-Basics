@@ -23,5 +23,14 @@ void UTriggerComponent::BeginPlay()
 void UTriggerComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
     Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-    UE_LOG(LogTemp, Display, TEXT("TriggerComponent ticking"));
+    TArray<AActor*> Actors;
+	GetOverlappingActors(Actors);
+	for (AActor* Actor: Actors)
+	{
+		if (Actor->ActorHasTag(key))
+		{
+			UE_LOG(LogTemp, Display, TEXT("chiave corretta"));
+			return;
+		}
+	}
 }
