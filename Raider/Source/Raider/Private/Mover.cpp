@@ -36,19 +36,40 @@ void  UMover::DoorMovemnt(bool ShouldOpen, float DeltaTime)
 {
 	FVector CurrentLocation = GetOwner()->GetActorLocation();
 	FVector TargetLocation;
-	UE_LOG(LogTemp, Display, TEXT("Actor OriginalLocation %s"), *OriginalLocation.ToString());
+
 	if (ShouldOpen)
 	{
 		TargetLocation = OriginalLocation + MoveOffset;
 	}
 	else
 	{
-		TargetLocation = OriginalLocation;
+		TargetLocation = OriginalLocation;  // Ritorna alla posizione originale
 	}
+
+	// Log utile
 	UE_LOG(LogTemp, Display, TEXT("Actor TargetLocation %s"), *TargetLocation.ToString());
-	float Speed = FVector::Distance(CurrentLocation, TargetLocation)/TimeToMove;
+
+	// Interpolazione costante verso il target
 	FVector NewLocation = FMath::VInterpConstantTo(CurrentLocation, TargetLocation, DeltaTime, 100);
 	GetOwner()->SetActorLocation(NewLocation);
+}
+
+void  UMover::DoorMovemnt2(bool ShouldOpen, float DeltaTime)
+{
+	
+	UE_LOG(LogTemp, Display, TEXT("Actor OriginalLocation %s"), *OriginalLocation.ToString());
+	if (ShouldOpen)
+	{
+		FVector CurrentLocation = GetOwner()->GetActorLocation();
+		FVector TargetLocation = OriginalLocation + MoveOffset;
+		UE_LOG(LogTemp, Display, TEXT("Actor TargetLocation %s"), *TargetLocation.ToString());
+		// float Speed = FVector::Distance(CurrentLocation, TargetLocation)/TimeToMove;
+		FVector NewLocation = FMath::VInterpConstantTo(CurrentLocation, TargetLocation, DeltaTime, 100);
+		GetOwner()->SetActorLocation(NewLocation);
+	}else
+	{
+
+	}
 }
 
 void UMover::SetShouldMove(bool NewShouldMove)

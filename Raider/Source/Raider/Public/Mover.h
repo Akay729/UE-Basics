@@ -24,7 +24,7 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-	void SetShouldMove(bool ShouldMove);
+	void SetShouldMove(bool NewShouldMove);
 
 private:
 	float MyFloat;
@@ -40,5 +40,6 @@ private:
 	bool ShouldMove;
 	
 	void DoorMovemnt(bool ShouldOpen, float DeltaTime);
+	void DoorMovemnt2(bool ShouldOpen, float DeltaTime);
 	void OldSolution();
 };
