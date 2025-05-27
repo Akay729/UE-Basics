@@ -183,6 +183,7 @@ void UGrabber::Grab()
 
 		UPrimitiveComponent* HitComponent = HitResult.GetComponent();
 		HitComponent->WakeAllRigidBodies();
+		HitResult.GetActor()->Tags.Add("Grabbed");
 		PhysicsHandle->GrabComponentAtLocationWithRotation(
 			HitComponent,
 			NAME_None,
@@ -206,6 +207,8 @@ void UGrabber::Release()
 	
 	if (GrabbedComponent != nullptr)
 	{
+		//AActor* GrabbedActor;
+		GrabbedComponent->GetOwner()->Tags.Remove("Grabbed");
 		GrabbedComponent->WakeAllRigidBodies();
 		PhysicsHandle->ReleaseComponent();
 	}
