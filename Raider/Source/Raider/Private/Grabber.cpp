@@ -62,7 +62,7 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	// PrintDamage(dmg);
 	if (!HasPhysicsHandle()) {return;}
 	UPhysicsHandleComponent* PhysicsHandle =GetPhysicsHandle();
-	if( PhysicsHandle->GetGrabbedComponent()!= nullptr)
+	if( PhysicsHandle && PhysicsHandle->GetGrabbedComponent())
 	{
 		FVector TagetLocation = GetComponentLocation() + GetForwardVector() * 200.0f;
 		PhysicsHandle->SetTargetLocationAndRotation(TagetLocation, GetComponentRotation());
@@ -205,11 +205,11 @@ void UGrabber::Release()
 	UPhysicsHandleComponent* PhysicsHandle = GetPhysicsHandle();
 	UPrimitiveComponent* GrabbedComponent = PhysicsHandle->GetGrabbedComponent();
 	
-	if (GrabbedComponent != nullptr)
+	if (GrabbedComponent)
 	{
-		//AActor* GrabbedActor;
+		// AActor* GrabbedActor;
 		GrabbedComponent->GetOwner()->Tags.Remove("Grabbed");
-		GrabbedComponent->WakeAllRigidBodies();
+		// GrabbedComponent->WakeAllRigidBodies();
 		PhysicsHandle->ReleaseComponent();
 	}
 	UE_LOG(LogTemp, Display, TEXT("Release:"));

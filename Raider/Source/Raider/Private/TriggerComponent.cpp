@@ -24,7 +24,7 @@ void UTriggerComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 {
     Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
     AActor* Actor = GetAcceptableActor();
-	if (Actor != nullptr)
+	if (Actor)
 	{
 		Mover->SetShouldMove(true);
 		UE_LOG(LogTemp, Display, TEXT("Unlocking!"));
@@ -42,7 +42,7 @@ AActor* UTriggerComponent::GetAcceptableActor() const
 	GetOverlappingActors(Actors);
 	for (AActor* Actor: Actors)
 	{
-		if (Actor->ActorHasTag(key))
+		if (Actor->ActorHasTag(key) && Actor->Tags.Contains("Grabbed")!=true) //2 modi per fare la stessa cosa
 		{
 			UE_LOG(LogTemp, Display, TEXT("chiave corretta"));
 			return Actor;
