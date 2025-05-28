@@ -27,17 +27,37 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 private:
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true")) // questo macro espone ciò che ha sotto ad unreal
 	class UCapsuleComponent* CapsuleComp;
 	
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	UStaticMeshComponent* BaseMesh;
 	
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	UStaticMeshComponent* TurretMesh;
 	
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	USceneComponent* ProjectileSpawnPoint;
 
+public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	int32 VisibleAnywhereInt = 31;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 EditableAnywhereInt = 32;
+
+	UPROPERTY(VisibleInstanceOnly) //Questo viene visto solo quando viene istanziato nel world 
+	int32 VisibleInstanceOnlyInt = 33;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) // var creata
+	float speed = 350.f;
+
+	UPROPERTY(VisibleDefaultsOnly)
+	int32 VisibleDefaultsOnlyInt = 34;
+
+	UPROPERTY(EditDefaultsOnly)
+	int32 EditDefaultsOnlyInt = 36;
+
+	UPROPERTY(EditInstanceOnly)
+	int32 EditInstanceOnlyInt = 37;
 };
