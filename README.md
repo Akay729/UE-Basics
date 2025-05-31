@@ -22,7 +22,7 @@ Inside this directory, you may find:
 ## Note
 
 ⚠️ **This is not a production directory.**  
-All files and content are for educational or experimental purposes only.
+All files and content are for educational or experimental purposes only
 
 ## Requirements
 
