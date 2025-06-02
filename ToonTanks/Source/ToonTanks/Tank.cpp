@@ -4,6 +4,7 @@
 #include "Tank.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Kismet/GameplayStatics.h"
 // Sets default values
 ATank::ATank()
 {
@@ -29,6 +30,38 @@ void ATank::BeginPlay()
 void ATank::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+    //MoveForward();
 
 }
 
+//--- Not following the video cause is outdated ---
+// Called to bind functionality to input
+/* void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+    PlayerInputComponent->BindAxis(TEXT("MoveForward"), this, &ATank::MoveForward);
+
+} */
+
+void ATank::MoveForward(float value)
+{
+    FVector DeltaLocation = FVector::ZeroVector;
+    float DeltaTime = UGameplayStatics::GetWorldDeltaSeconds(this);
+    DeltaLocation.X  = value * DeltaTime * speed;
+    AddActorLocalOffset(DeltaLocation);
+}
+
+void ATank::TankTurn(float value)
+{
+    //GetWorld()->GetDeltaSeconds() // Fa la stessa cosa senza passare da una libreria utiliti
+    float DeltaTime = UGameplayStatics::GetWorldDeltaSeconds(this);
+    FRotator DeltaRotation = FRotator(0.0f, value * DeltaTime * speed, 0.0f);
+    
+    //DeltaRotation.yam = value;
+    AddActorLocalRotation(DeltaRotation);
+}
+
+void ATank::Fire(bool value)
+{
+    UE_LOG(LogTemp, Display, TEXT("Shoting"));
+}

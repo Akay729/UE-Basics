@@ -24,7 +24,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	//virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true")) // questo macro espone ciò che ha sotto ad unreal
@@ -49,9 +49,10 @@ public:
 	UPROPERTY(VisibleInstanceOnly) //Questo viene visto solo quando viene istanziato nel world 
 	int32 VisibleInstanceOnlyInt = 33;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) // var creata
-	float speed = 350.f;
-
+	// Da Togliere percheè altrimenti causa shadowing
+	/* UPROPERTY(EditAnywhere, BlueprintReadWrite) // var creata
+	float speed;
+ */
 	UPROPERTY(VisibleDefaultsOnly)
 	int32 VisibleDefaultsOnlyInt = 34;
 
@@ -60,4 +61,5 @@ public:
 
 	UPROPERTY(EditInstanceOnly)
 	int32 EditInstanceOnlyInt = 37;
+
 };

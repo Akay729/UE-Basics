@@ -25,6 +25,9 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	
+	//--- Not following the video cause is outdated ---
+	//virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Components")
@@ -32,4 +35,16 @@ public:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Components")
 	class UCameraComponent* CameraComp;
+
+	UFUNCTION(BlueprintCallable)
+	void MoveForward(float value);
+
+	UFUNCTION(BlueprintCallable)
+	void TankTurn(float value);
+
+	UFUNCTION(BlueprintCallable)
+	void Fire(bool value);
+
+	UPROPERTY(EditAnywhere);
+	float speed = 10.0f; 
 };
