@@ -23,6 +23,7 @@ ATank::ATank()
 void ATank::BeginPlay()
 {
 	Super::BeginPlay();
+    PlayerContorllerRef = Cast<AplayerController>(GetController());
 	
 }
 

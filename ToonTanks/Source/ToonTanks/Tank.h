@@ -50,4 +50,7 @@ public:
 	
 	UPROPERTY(EditAnywhere);
 	float TurnSpeed = 10.0f; 
+
+private:
+	APlayerController* PlayerControllerRef;
 };
