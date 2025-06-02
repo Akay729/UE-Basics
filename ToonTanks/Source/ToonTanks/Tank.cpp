@@ -47,15 +47,15 @@ void ATank::MoveForward(float value)
 {
     FVector DeltaLocation = FVector::ZeroVector;
     float DeltaTime = UGameplayStatics::GetWorldDeltaSeconds(this);
-    DeltaLocation.X  = value * DeltaTime * speed;
-    AddActorLocalOffset(DeltaLocation);
+    DeltaLocation.X  = value * DeltaTime * Speed;
+    AddActorLocalOffset(DeltaLocation, true);
 }
 
 void ATank::TankTurn(float value)
 {
     //GetWorld()->GetDeltaSeconds() // Fa la stessa cosa senza passare da una libreria utiliti
     float DeltaTime = UGameplayStatics::GetWorldDeltaSeconds(this);
-    FRotator DeltaRotation = FRotator(0.0f, value * DeltaTime * speed, 0.0f);
+    FRotator DeltaRotation = FRotator(0.0f, value * DeltaTime * TurnSpeed, 0.0f);
     
     //DeltaRotation.yam = value;
     AddActorLocalRotation(DeltaRotation);

@@ -46,5 +46,8 @@ public:
 	void Fire(bool value);
 
 	UPROPERTY(EditAnywhere);
-	float speed = 10.0f; 
+	float Speed = 10.0f;
+	
+	UPROPERTY(EditAnywhere);
+	float TurnSpeed = 10.0f; 
 };
