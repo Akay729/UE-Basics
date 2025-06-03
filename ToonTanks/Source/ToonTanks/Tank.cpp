@@ -3,8 +3,10 @@
 
 #include "Tank.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Engine/HitResult.h"
 #include "Camera/CameraComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "DrawDebugHelpers.h"
 // Sets default values
 ATank::ATank()
 {
@@ -23,14 +25,28 @@ ATank::ATank()
 void ATank::BeginPlay()
 {
 	Super::BeginPlay();
-    PlayerContorllerRef = Cast<AplayerController>(GetController());
+    PlayerControllerRef = Cast<APlayerController>(GetController());
 	
 }
 
 // Called every frame
 void ATank::Tick(float DeltaTime)
 {
-	Super::Tick(DeltaTime);
+    if (PlayerControllerRef)
+    {
+        Super::Tick(DeltaTime);
+        FHitResult OutHitResult;
+        bool isHit = PlayerControllerRef->GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, false, OutHitResult);
+        if (isHit)
+        {
+            DrawDebugSphere(GetWorld(),OutHitResult.ImpactPoint, 10, 16, FColor::Red);
+            UE_LOG(LogTemp, Display, TEXT("Mouse cordinate: %s"), *OutHitResult.ImpactPoint.ToString());
+        } 
+    }
+    
+
+    
+    
     //MoveForward();
 
 }
