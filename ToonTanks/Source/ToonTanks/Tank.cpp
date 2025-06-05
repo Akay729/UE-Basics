@@ -39,7 +39,9 @@ void ATank::Tick(float DeltaTime)
         bool isHit = PlayerControllerRef->GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, false, OutHitResult);
         if (isHit)
         {
-            DrawDebugSphere(GetWorld(),OutHitResult.ImpactPoint, 10, 16, FColor::Red);
+            FVector MousePoint = OutHitResult.ImpactPoint;
+            DrawDebugSphere(GetWorld(),MousePoint, 10, 16, FColor::Red);
+            RotateTurret(MousePoint);
             UE_LOG(LogTemp, Display, TEXT("Mouse cordinate: %s"), *OutHitResult.ImpactPoint.ToString());
         } 
     }
