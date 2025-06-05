@@ -45,12 +45,6 @@ void ATank::Tick(float DeltaTime)
             UE_LOG(LogTemp, Display, TEXT("Mouse cordinate: %s"), *OutHitResult.ImpactPoint.ToString());
         } 
     }
-    
-
-    
-    
-    //MoveForward();
-
 }
 
 //--- Not following the video cause is outdated ---
