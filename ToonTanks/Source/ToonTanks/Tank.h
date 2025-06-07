@@ -42,9 +42,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void TankTurn(float value);
 
-	UFUNCTION(BlueprintCallable)
-	void Fire(bool value);
-
 	UPROPERTY(EditAnywhere);
 	float Speed = 10.0f;
 	

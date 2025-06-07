@@ -19,6 +19,7 @@ protected:
 	// Called when the game starts or when spawned
 	/* virtual void BeginPlay() override; */
 	void RotateTurret(FVector LookAtTarget);
+	UFUNCTION(BlueprintCallable)
 	void Fire();
 
 public:	
@@ -41,8 +42,8 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	USceneComponent* ProjectileSpawnPoint;
 	
-	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	// questa var rapresenta la classe imposta da deatils (in questo caso ho impostato BP_Projectile)
+	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	TSubclassOf<class AProjectile> ProjectileClass;
 
 public:
