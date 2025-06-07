@@ -24,7 +24,12 @@ protected:
 private:
 	class ATank* Tank;
 	
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite);
-	float FireRange = 100.0f; 
+	UPROPERTY(EditDefaultsOnly, Category = "Combat");
+	float FireRange = 100.0f;
+	UPROPERTY(EditDefaultsOnly, Category = "Combat"); 
+	float FireRate = 2.f;
+	
+	FTimerHandle FireRateTimeHandler;
+	void TowerBehavour();
+
 };

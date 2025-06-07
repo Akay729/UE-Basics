@@ -32,9 +32,9 @@ void ATank::BeginPlay()
 // Called every frame
 void ATank::Tick(float DeltaTime)
 {
+    Super::Tick(DeltaTime);
     if (PlayerControllerRef)
     {
-        Super::Tick(DeltaTime);
         FHitResult OutHitResult;
         bool isHit = PlayerControllerRef->GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, false, OutHitResult);
         if (isHit)
@@ -72,9 +72,4 @@ void ATank::TankTurn(float value)
     
     //DeltaRotation.yam = value;
     AddActorLocalRotation(DeltaRotation);
-}
-
-void ATank::Fire(bool value)
-{
-    UE_LOG(LogTemp, Display, TEXT("Shoting"));
 }

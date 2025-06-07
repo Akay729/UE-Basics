@@ -39,6 +39,14 @@ void ABasePawn::RotateTurret(FVector LookAtTarget)
 	);
 }
 
+void ABasePawn::Fire()
+{
+    //UE_LOG(LogTemp, Display, TEXT("Shoting"));
+    FVector ProjectileSpawnLocation = ProjectileSpawnPoint->GetComponentLocation();
+    UE_LOG(LogTemp, Display, TEXT("Shoting at: %s"), *ProjectileSpawnLocation.ToString());
+    DrawDebugSphere(GetWorld(), ProjectileSpawnLocation, 10, 16, FColor::Red, false, 5.0f);
+}
+
 /* // Called when the game starts or when spawned
 void ABasePawn::BeginPlay()
 {
