@@ -40,6 +40,10 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	USceneComponent* ProjectileSpawnPoint;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	// questa var rapresenta la classe imposta da deatils (in questo caso ho impostato BP_Projectile)
+	TSubclassOf<class AProjectile> ProjectileClass;
 
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)

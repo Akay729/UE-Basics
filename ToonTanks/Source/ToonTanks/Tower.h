@@ -30,6 +30,7 @@ private:
 	float FireRate = 2.f;
 	
 	FTimerHandle FireRateTimeHandler;
-	void TowerBehavour();
+	bool IsInFireRange();
+	void CheckFireCondition();
 
 };

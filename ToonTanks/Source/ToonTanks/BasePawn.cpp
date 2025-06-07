@@ -5,6 +5,7 @@
 #include "Components/SceneComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Projectile.h"
 
 // Sets default values
 ABasePawn::ABasePawn()
@@ -14,10 +15,10 @@ ABasePawn::ABasePawn()
 	CapsuleComp = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Root")); // è una funztione di default CreateDefaultSubobject bisogna passarli una classe ed il nome
 	RootComponent = CapsuleComp;
 
-	BaseMesh =  CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Base Mesh"));
+	BaseMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Base Mesh"));
 	BaseMesh->SetupAttachment(CapsuleComp);
 	
-	TurretMesh =  CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Turret Mesh"));
+	TurretMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Turret Mesh"));
 	TurretMesh->SetupAttachment(BaseMesh);
 
 	ProjectileSpawnPoint = CreateDefaultSubobject<USceneComponent>(TEXT("Projectile Spawn Point"));
@@ -43,8 +44,10 @@ void ABasePawn::Fire()
 {
     //UE_LOG(LogTemp, Display, TEXT("Shoting"));
     FVector ProjectileSpawnLocation = ProjectileSpawnPoint->GetComponentLocation();
-    UE_LOG(LogTemp, Display, TEXT("Shoting at: %s"), *ProjectileSpawnLocation.ToString());
-    DrawDebugSphere(GetWorld(), ProjectileSpawnLocation, 10, 16, FColor::Red, false, 5.0f);
+    /* UE_LOG(LogTemp, Display, TEXT("Shoting at: %s"), *ProjectileSpawnLocation.ToString());
+    DrawDebugSphere(GetWorld(), ProjectileSpawnLocation, 10, 16, FColor::Red, false, 5.0f); */
+    FRotator SpawnRotation = TurretMesh->GetComponentRotation();
+	GetWorld()->SpawnActor<AProjectile>(ProjectileClass, ProjectileSpawnLocation, SpawnRotation);
 }
 
 /* // Called when the game starts or when spawned
