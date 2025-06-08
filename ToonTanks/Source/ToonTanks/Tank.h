@@ -23,11 +23,13 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
+	//--- Not following the video cause is outdated ---
+	//virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	
-	//--- Not following the video cause is outdated ---
-	//virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	void HandleDestruction();
+	APlayerController* GetTankPlayerController() const {return TankPlayerController;};
 
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Components")
@@ -49,5 +51,5 @@ public:
 	float TurnSpeed = 10.0f; 
 
 private:
-	APlayerController* PlayerControllerRef;
+	APlayerController* TankPlayerController;
 };

@@ -25,7 +25,7 @@ ATank::ATank()
 void ATank::BeginPlay()
 {
 	Super::BeginPlay();
-    PlayerControllerRef = Cast<APlayerController>(GetController());
+    TankPlayerController = Cast<APlayerController>(GetController());
 	
 }
 
@@ -33,10 +33,10 @@ void ATank::BeginPlay()
 void ATank::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
-    if (PlayerControllerRef)
+    if (TankPlayerController)
     {
         FHitResult OutHitResult;
-        bool isHit = PlayerControllerRef->GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, false, OutHitResult);
+        bool isHit = TankPlayerController->GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, false, OutHitResult);
         if (isHit)
         {
             FVector MousePoint = OutHitResult.ImpactPoint;
@@ -45,6 +45,13 @@ void ATank::Tick(float DeltaTime)
             //UE_LOG(LogTemp, Display, TEXT("Mouse cordinate: %s"), *OutHitResult.ImpactPoint.ToString());
         } 
     }
+}
+
+void ATank::HandleDestruction()
+{
+    Super::HandleDestruction();
+    SetActorHiddenInGame(true);
+    SetActorTickEnabled(false);
 }
 
 //--- Not following the video cause is outdated ---
