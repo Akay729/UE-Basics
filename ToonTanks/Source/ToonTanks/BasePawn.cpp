@@ -47,7 +47,10 @@ void ABasePawn::Fire()
     /* UE_LOG(LogTemp, Display, TEXT("Shoting at: %s"), *ProjectileSpawnLocation.ToString());
     DrawDebugSphere(GetWorld(), ProjectileSpawnLocation, 10, 16, FColor::Red, false, 5.0f); */
     FRotator SpawnRotation = TurretMesh->GetComponentRotation();
-	GetWorld()->SpawnActor<AProjectile>(ProjectileClass, ProjectileSpawnLocation, SpawnRotation);
+
+	//auto lascia al compilere il tipo di classe
+	auto Projectil = GetWorld()->SpawnActor<AProjectile>(ProjectileClass, ProjectileSpawnLocation, SpawnRotation);
+	Projectil->SetOwner(this);
 }
 
 /* // Called when the game starts or when spawned

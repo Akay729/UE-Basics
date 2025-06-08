@@ -33,6 +33,9 @@ private:
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormaImpulse, const FHitResult& Hit);
 
+	UPROPERTY(EditAnywhere)
+	float Damage = 25.f;
+
 	//Aggiunta che avevo fatto io
 	/* UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true")) // questo macro espone ciò che ha sotto ad unreal
 	class UCapsuleComponent* CapsuleComp; */
