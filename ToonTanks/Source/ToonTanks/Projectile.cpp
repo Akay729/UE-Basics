@@ -28,13 +28,20 @@ AProjectile::AProjectile()
 void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-	DrawDebugSphere(GetWorld(), GetActorLocation(), 10, 16, FColor::Blue, false, 5.0f);
-	
+	MeshComp->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
 }
 
+void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormaImpulse, const FHitResult& Hit)
+{
+	UE_LOG(LogTemp, Warning, TEXT("OnHit Hit Component: %s"), *HitComp->GetName());
+	UE_LOG(LogTemp, Warning, TEXT("OnHit Other Actor: %s"), *OtherActor->GetName());
+	UE_LOG(LogTemp, Warning, TEXT("OnHit Other Component: %s"), *OtherComp->GetName());
+		
+}
 // Called every frame
 void AProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
 }
+

@@ -42,7 +42,7 @@ void ATank::Tick(float DeltaTime)
             FVector MousePoint = OutHitResult.ImpactPoint;
             DrawDebugSphere(GetWorld(),MousePoint, 10, 16, FColor::Red);
             RotateTurret(MousePoint);
-            UE_LOG(LogTemp, Display, TEXT("Mouse cordinate: %s"), *OutHitResult.ImpactPoint.ToString());
+            //UE_LOG(LogTemp, Display, TEXT("Mouse cordinate: %s"), *OutHitResult.ImpactPoint.ToString());
         } 
     }
 }
