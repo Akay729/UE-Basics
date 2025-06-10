@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "Projectile.generated.h"
 
+class USoundBase;
+
 UCLASS()
 class TOONTANKS_API AProjectile : public AActor
 {
@@ -41,6 +43,12 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	class UParticleSystem* HitParticles;
+
+	UPROPERTY(EditAnywhere, Category="Combat")
+	USoundBase* LaunchSound; // La classe è stata dichiarata dopo include
+
+	UPROPERTY(EditAnywhere, Category="Combat")
+	USoundBase* HitSound;
 	//Aggiunta che avevo fatto io
 	/* UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true")) // questo macro espone ciò che ha sotto ad unreal
 	class UCapsuleComponent* CapsuleComp; */

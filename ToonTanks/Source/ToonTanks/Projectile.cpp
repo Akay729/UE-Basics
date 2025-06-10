@@ -3,6 +3,7 @@
 #include "Projectile.h"
 #include "Components/SceneComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Particles/ParticleSystem.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "GameFramework/DamageType.h"
@@ -37,6 +38,10 @@ void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 	MeshComp->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
+	if(LaunchSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), LaunchSound, GetActorLocation());
+	}
 }
 
 void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormaImpulse, const FHitResult& Hit)
@@ -56,6 +61,10 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimi
 		if (HitParticles)
 		{
 			UGameplayStatics::SpawnEmitterAtLocation(this, HitParticles, GetActorLocation(), GetActorRotation(), true);
+		}
+		if(HitSound)
+		{
+			UGameplayStatics::PlaySoundAtLocation(GetWorld(), HitSound, GetActorLocation());
 		}
 		
 	}
