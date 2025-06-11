@@ -4,6 +4,7 @@
 #include "BasePawn.h"
 #include "Components/SceneComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Particles/ParticleSystem.h"
 #include "Kismet/GameplayStatics.h"
 #include "Projectile.h"
 
@@ -29,6 +30,14 @@ ABasePawn::ABasePawn()
 void ABasePawn::HandleDestruction()
 {
 	//TODO:VFX/SFX
+	if (DeathParticles)
+	{
+		UGameplayStatics::SpawnEmitterAtLocation(this, DeathParticles, GetActorLocation(), GetActorRotation(), true);
+	}
+	if(DeathSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), DeathSound, GetActorLocation());
+	}
 
 }
 

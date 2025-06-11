@@ -44,6 +44,12 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	USceneComponent* ProjectileSpawnPoint;
 	
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	class UParticleSystem* DeathParticles;
+	
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	class USoundBase* DeathSound;
+	
 	// questa var rapresenta la classe imposta da deatils (in questo caso ho impostato BP_Projectile)
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	TSubclassOf<class AProjectile> ProjectileClass;
