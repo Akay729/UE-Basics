@@ -54,6 +54,9 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	TSubclassOf<class AProjectile> ProjectileClass;
 
+	UPROPERTY(EditAnywhere, Category="Combat")
+	TSubclassOf<class UCameraShakeBase> DeathCameraShakeClass;
+
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	int32 VisibleAnywhereInt = 31;

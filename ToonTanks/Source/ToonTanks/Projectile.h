@@ -49,6 +49,9 @@ private:
 
 	UPROPERTY(EditAnywhere, Category="Combat")
 	USoundBase* HitSound;
+
+	UPROPERTY(EditAnywhere, Category="Combat")
+	TSubclassOf<class UCameraShakeBase> HitCameraShakeClass;
 	//Aggiunta che avevo fatto io
 	/* UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true")) // questo macro espone ciò che ha sotto ad unreal
 	class UCapsuleComponent* CapsuleComp; */
