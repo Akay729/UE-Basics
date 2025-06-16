@@ -55,6 +55,7 @@ SourceArt/**/*.tga
 **/Saved/*
 **/Plugins/**/Binaries/*
 **/Plugins/**/Intermediate/*
+**/SimpleShooter/Content/AssetPacks/
 
 # Built data for maps
 *_BuiltData.uasset
