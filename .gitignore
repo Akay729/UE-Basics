@@ -1,5 +1,7 @@
-# User-specific files (Visual Studio)
+# User-specific files (Visual Studio) (VS Code)
 .vs/
+.vscode/
+**/.vscode/
 
 # Compiled Object files
 *.slo
