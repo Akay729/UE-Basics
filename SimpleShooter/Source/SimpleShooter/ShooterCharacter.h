@@ -6,6 +6,12 @@
 #include "GameFramework/Character.h"
 #include "ShooterCharacter.generated.h"
 
+//Forward Declaration
+class UInputMappingContext;
+class UInputAction;
+struct FInputActionValue;
+
+
 UCLASS()
 class SIMPLESHOOTER_API AShooterCharacter : public ACharacter
 {
@@ -18,6 +24,26 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	void Move(const FInputActionValue& value);
+	void Look(const FInputActionValue& value);
+	void JumpAction();
+	void FireAction();
+
+	UPROPERTY(EditDefaultsOnly, Category="Input")
+	UInputMappingContext* DefaultMappingContext;
+
+	UPROPERTY(EditDefaultsOnly, Category="Input")
+	UInputAction* IA_Move;
+	
+	UPROPERTY(EditDefaultsOnly, Category="Input")
+	UInputAction* IA_Jump;
+
+	UPROPERTY(EditDefaultsOnly, Category="Input")
+	UInputAction* IA_Look;
+
+	UPROPERTY(EditDefaultsOnly, Category="Input")
+	UInputAction* IA_Fire;
 
 public:	
 	// Called every frame
