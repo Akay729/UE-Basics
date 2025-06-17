@@ -8,12 +8,23 @@
 #include "InputAction.h"
 #include "InputActionValue.h"
 #include "GameFramework/PlayerController.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "Camera/CameraComponent.h"
 
 // Sets default values
 AShooterCharacter::AShooterCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	
+	//Spirng Arm Comp
+	SpringArmComp = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spirng Arm"));
+	SpringArmComp->SetupAttachment(RootComponent);
+
+	//Camera Comp
+
+	CameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
+	CameraComp->SetupAttachment(SpringArmComp);
 
 }
 

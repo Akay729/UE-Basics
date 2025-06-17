@@ -9,8 +9,9 @@
 //Forward Declaration
 class UInputMappingContext;
 class UInputAction;
+class UCameraComponent;
+class USpringArmComponent;
 struct FInputActionValue;
-
 
 UCLASS()
 class SIMPLESHOOTER_API AShooterCharacter : public ACharacter
@@ -44,6 +45,12 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category="Input")
 	UInputAction* IA_Fire;
+
+	UPROPERTY(VisibleAnywhere, Category="Settings")
+	USpringArmComponent* SpringArmComp;
+
+	UPROPERTY(VisibleAnywhere, Category="Settings")
+	UCameraComponent* CameraComp;
 
 public:	
 	// Called every frame
