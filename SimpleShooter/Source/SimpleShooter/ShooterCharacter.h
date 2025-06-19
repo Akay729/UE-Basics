@@ -12,6 +12,7 @@ class UInputAction;
 class UCameraComponent;
 class USpringArmComponent;
 struct FInputActionValue;
+class AGun;
 
 UCLASS()
 class SIMPLESHOOTER_API AShooterCharacter : public ACharacter
@@ -59,4 +60,10 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+private:
+	UPROPERTY(EditDefaultsOnly)
+	AGun* Gun;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<AGun> GunClass;
 };
