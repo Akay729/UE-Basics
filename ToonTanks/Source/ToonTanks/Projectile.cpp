@@ -25,7 +25,7 @@ AProjectile::AProjectile()
 
 	ProjectileMovementComp = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Move Comp"));
 	ProjectileMovementComp->MaxSpeed = 1000.0f;
-	ProjectileMovementComp->InitialSpeed = 1000.0f;
+	ProjectileMovementComp->InitialSpeed = 600.0f;
 
 	TrailParticles = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Trail Fx"));
 	TrailParticles->SetupAttachment(MeshComp);
