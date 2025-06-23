@@ -29,12 +29,24 @@ public:
 	void PullTrigger();
 
 private:
+	//
 	UPROPERTY(EditDefaultsOnly)
 	USceneComponent* Root;
+	
 	UPROPERTY(EditDefaultsOnly)
 	USkeletalMeshComponent* GunMesh;
 
 	UPROPERTY(EditDefaultsOnly)
-	UParticleSystem* ParticleSystem;
+	UParticleSystem* MuzzleParticleSystem;
+	
+	UPROPERTY(EditDefaultsOnly)
+	UParticleSystem* BulletParticleSystem;
+
+	UPROPERTY(EditDefaultsOnly)
+	float MaxRange = 1000.0f;
+
+	UPROPERTY(EditAnywhere)
+	float Damage = 10.f;
+	FCollisionQueryParams Params;
 
 };

@@ -34,6 +34,9 @@ void AShooterCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	Healt = Maxhealt;
+	UE_LOG(LogTemp, Display, TEXT("Healt set to MaxHealt: %f"), Healt);
+
 	Gun = GetWorld()->SpawnActor<AGun>(GunClass);
 	GetMesh()->HideBoneByName(TEXT("weapon_r"), EPhysBodyOp::PBO_None);
 	Gun->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponSocket"));
@@ -54,6 +57,13 @@ void AShooterCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+float AShooterCharacter::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser)
+{
+	float DamageApplied = Super::TakeDamage(DamageAmount,DamageEvent,EventInstigator,DamageCauser);
+	ReduceHealt(DamageApplied);
+	return DamageApplied;
 }
 
 // Called to bind functionality to input
@@ -93,4 +103,16 @@ void AShooterCharacter::FireAction()
 {
  UE_LOG(LogTemp, Display, TEXT("Pew"));
  Gun->PullTrigger();
+}
+
+void AShooterCharacter::ReduceHealt(float value)
+{
+	value = FMath::Min(Healt, value);
+	Healt -= value;
+	UE_LOG(LogTemp, Display, TEXT("Healt Reduce Current Healt: %f "), Healt);
+}
+
+float AShooterCharacter::GetHealt()
+{
+	return Healt;
 }
