@@ -7,6 +7,8 @@
 #include "Gun.generated.h"
 
 class USkeletalMeshComponent;
+class UParticleSystemComponent;
+class UParticleSystem;
 
 UCLASS()
 class SIMPLESHOOTER_API AGun : public AActor
@@ -24,10 +26,15 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	void PullTrigger();
 
 private:
 	UPROPERTY(EditDefaultsOnly)
 	USceneComponent* Root;
 	UPROPERTY(EditDefaultsOnly)
 	USkeletalMeshComponent* GunMesh;
+
+	UPROPERTY(EditDefaultsOnly)
+	UParticleSystem* ParticleSystem;
+
 };

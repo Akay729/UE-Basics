@@ -92,4 +92,5 @@ void AShooterCharacter::JumpAction()
 void AShooterCharacter::FireAction()
 {
  UE_LOG(LogTemp, Display, TEXT("Pew"));
+ Gun->PullTrigger();
 }

@@ -3,7 +3,10 @@
 
 #include "Gun.h"
 #include "Components/SkeletalMeshComponent.h"
-
+#include "Kismet/GameplayStatics.h"
+#include "Particles/ParticleSystem.h"
+#include "Particles/ParticleSystemComponent.h"
+#include "DrawDebughelpers.h"
 // Sets default values
 AGun::AGun()
 {
@@ -32,3 +35,19 @@ void AGun::Tick(float DeltaTime)
 
 }
 
+void AGun::PullTrigger()
+{
+	UGameplayStatics::SpawnEmitterAttached(ParticleSystem, GunMesh, TEXT("MuzzleFlashSocket"));
+	DrawDebugCamera(GetWorld(), GetActorLocation(), GetActorRotation(), 90, 1,  FColor::Green, true);
+
+	APawn* OwnerPawn = Cast<APawn>(GetOwner());
+	if(OwnerPawn == nullptr) return;
+	AController* OwnerController = OwnerPawn->GetController();
+	if (OwnerController == nullptr) return;
+
+
+	FVector ViewPointLocation;
+	FRotator ViewPointRotation;
+	OwnerController->GetPlayerViewPoint(ViewPointLocation, ViewPointRotation);
+	DrawDebugPoint(GetWorld(), ViewPointLocation, 10, FColor::Red, false, 2.0f);
+}
