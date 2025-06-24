@@ -61,11 +61,11 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser);
 	
-	UFUNCTION(BlueprintCallable)
-	float GetHealt();
+	UFUNCTION(BlueprintPure)
+	bool IsDead() const;
 
 private:
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY()
 	AGun* Gun;
 
 	UPROPERTY(EditDefaultsOnly)

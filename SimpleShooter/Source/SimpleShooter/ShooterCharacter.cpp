@@ -112,7 +112,7 @@ void AShooterCharacter::ReduceHealt(float value)
 	UE_LOG(LogTemp, Display, TEXT("Healt Reduce Current Healt: %f "), Healt);
 }
 
-float AShooterCharacter::GetHealt()
+bool AShooterCharacter::IsDead() const
 {
-	return Healt;
+	return Healt <= 0.f;
 }
