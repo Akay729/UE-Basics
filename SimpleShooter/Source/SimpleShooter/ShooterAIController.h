@@ -6,6 +6,8 @@
 #include "AIController.h"
 #include "ShooterAIController.generated.h"
 
+
+class UBehaviorTree;
 /**
  * 
  */
@@ -21,6 +23,11 @@ protected:
 	
 	UPROPERTY(VisibleAnywhere)
 	APawn* PlayerPawn;
-	UPROPERTY(EditAnywhere)
+
+	UPROPERTY(EditDefaultsOnly)
 	float AdvanceRadius = 200;
+
+	UPROPERTY(EditDefaultsOnly)
+	UBehaviorTree* AIBehavior;
+
 };
