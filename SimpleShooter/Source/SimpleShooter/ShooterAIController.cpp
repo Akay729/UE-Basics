@@ -12,6 +12,8 @@ void AShooterAIController::BeginPlay()
     // SetFocus(PlayerPawn);
     // MoveToActor(PlayerPawn, AdvanceRadius, false);
 
+    APawn* OwnerLocation = GetPawn();
+
     if (AIBehavior)
     {
         RunBehaviorTree(AIBehavior);
@@ -21,6 +23,7 @@ void AShooterAIController::BeginPlay()
         if (BBComp)
         {
             BBComp->SetValueAsVector(TEXT("PlayerLocation"), PlayerPawn->GetActorLocation());
+            BBComp->SetValueAsVector(TEXT("StartLocation"), OwnerLocation->GetActorLocation());
         }
         
     }
