@@ -20,5 +20,16 @@ void AShooterAIController::BeginPlay()
 void AShooterAIController::Tick(float DelataTime)
 {
     Super::Tick(DelataTime);
-    MoveToActor(PlayerPawn, 100, true);
+    
+    if (LineOfSightTo(PlayerPawn))
+    {
+        MoveToActor(PlayerPawn, 100, true);
+        SetFocus(PlayerPawn);
+    }
+    else
+    {
+        ClearFocus(EAIFocusPriority::Gameplay);
+        StopMovement();
+    }
+    
 }

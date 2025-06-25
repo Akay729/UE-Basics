@@ -21,4 +21,6 @@ protected:
 	
 	UPROPERTY(VisibleAnywhere)
 	APawn* PlayerPawn;
+	UPROPERTY(EditAnywhere)
+	float AdvanceRadius = 200;
 };
