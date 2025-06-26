@@ -19,7 +19,7 @@ void AShooterAIController::BeginPlay()
         RunBehaviorTree(AIBehavior);
 
         //Craezione di una chiave
-        UBlackboardComponent* BBComp = GetBlackboardComponent(); 
+        BBComp = GetBlackboardComponent(); 
         if (BBComp)
         {
             BBComp->SetValueAsVector(TEXT("PlayerLocation"), PlayerPawn->GetActorLocation());
@@ -27,8 +27,6 @@ void AShooterAIController::BeginPlay()
         }
         
     }
-    
-    
     
     //UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetNavigationSystem(GetWorld());
     //if (NavSystem == nullptr) return;
@@ -38,15 +36,23 @@ void AShooterAIController::Tick(float DelataTime)
 {
     Super::Tick(DelataTime);
     
-    /* if (LineOfSightTo(PlayerPawn))
+    if (LineOfSightTo(PlayerPawn))
     {
-        MoveToActor(PlayerPawn, AdvanceRadius, true);
-        SetFocus(PlayerPawn);
+        if(BBComp)
+        {
+            BBComp->SetValueAsVector(TEXT("PlayerLocation"), PlayerPawn->GetActorLocation());
+            BBComp->SetValueAsVector(TEXT("LastKnowLocation"), PlayerPawn->GetActorLocation());
+        }
+        
+        // MoveToActor(PlayerPawn, AdvanceRadius, true);
+        // SetFocus(PlayerPawn);
     }
     else
     {
-        ClearFocus(EAIFocusPriority::Gameplay);
-        StopMovement();
-    } */
+        BBComp->ClearValue(TEXT("PlayerLocation"));
+
+        // ClearFocus(EAIFocusPriority::Gameplay);
+        // StopMovement();
+    }
     
 }

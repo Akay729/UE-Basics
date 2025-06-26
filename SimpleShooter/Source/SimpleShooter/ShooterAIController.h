@@ -8,6 +8,7 @@
 
 
 class UBehaviorTree;
+class UBlackboardComponent;
 /**
  * 
  */
@@ -29,5 +30,8 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly)
 	UBehaviorTree* AIBehavior;
+
+private:
+ 	UBlackboardComponent* BBComp;
 
 };
