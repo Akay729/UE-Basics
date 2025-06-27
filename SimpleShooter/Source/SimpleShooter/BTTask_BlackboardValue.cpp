@@ -13,7 +13,9 @@ UBTTask_BlackboardValue::UBTTask_BlackboardValue()
 EBTNodeResult::Type UBTTask_BlackboardValue::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
     Super::ExecuteTask(OwnerComp, NodeMemory);
+    
     FName SelectedKey = GetSelectedBlackboardKey();
+    // Clear the value assign to it
     OwnerComp.GetBlackboardComponent()->ClearValue(SelectedKey);
     return EBTNodeResult::Succeeded;
 }
