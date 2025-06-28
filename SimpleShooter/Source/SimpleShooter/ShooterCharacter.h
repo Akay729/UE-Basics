@@ -27,10 +27,11 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	//Action
 	void Move(const FInputActionValue& value);
 	void Look(const FInputActionValue& value);
 	void JumpAction();
-	void FireAction();
+
 
 	UPROPERTY(EditDefaultsOnly, Category="Input")
 	UInputMappingContext* DefaultMappingContext;
@@ -63,6 +64,9 @@ public:
 	
 	UFUNCTION(BlueprintPure)
 	bool IsDead() const;
+
+	//Action
+	void FireAction();
 
 private:
 	UPROPERTY()
