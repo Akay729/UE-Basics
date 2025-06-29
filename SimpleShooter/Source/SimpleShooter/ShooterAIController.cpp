@@ -22,7 +22,7 @@ void AShooterAIController::BeginPlay()
         BBComp = GetBlackboardComponent(); 
         if (BBComp)
         {
-            BBComp->SetValueAsVector(TEXT("PlayerLocation"), PlayerPawn->GetActorLocation());
+            //BBComp->SetValueAsVector(TEXT("PlayerLocation"), PlayerPawn->GetActorLocation());
             BBComp->SetValueAsVector(TEXT("StartLocation"), OwnerLocation->GetActorLocation());
         }
         
