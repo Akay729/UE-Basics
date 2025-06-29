@@ -36,7 +36,8 @@ void AShooterAIController::Tick(float DelataTime)
 {
     Super::Tick(DelataTime);
     
-    if (LineOfSightTo(PlayerPawn))
+    //No more need to hard code this
+    /* if (LineOfSightTo(PlayerPawn))
     {
         if(BBComp)
         {
@@ -53,6 +54,6 @@ void AShooterAIController::Tick(float DelataTime)
 
         // ClearFocus(EAIFocusPriority::Gameplay);
         // StopMovement();
-    }
+    } */
     
 }
