@@ -89,8 +89,8 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	{
 		EnhancedInput->BindAction(IA_Move, ETriggerEvent::Triggered, this, &AShooterCharacter::Move);
 		EnhancedInput->BindAction(IA_Look, ETriggerEvent::Triggered, this, &AShooterCharacter::Look);
-		EnhancedInput->BindAction(IA_Jump, ETriggerEvent::Triggered, this, &AShooterCharacter::JumpAction);
-		EnhancedInput->BindAction(IA_Fire, ETriggerEvent::Triggered, this, &AShooterCharacter::FireAction);
+		EnhancedInput->BindAction(IA_Jump, ETriggerEvent::Started, this, &AShooterCharacter::JumpAction);
+		EnhancedInput->BindAction(IA_Fire, ETriggerEvent::Started, this, &AShooterCharacter::FireAction);
 	}
 }
 

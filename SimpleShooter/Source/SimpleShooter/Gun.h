@@ -38,9 +38,15 @@ private:
 
 	UPROPERTY(EditDefaultsOnly)
 	UParticleSystem* MuzzleParticleSystem;
+
+	UPROPERTY(EditDefaultsOnly)
+	USoundBase* MuzzleSound;
 	
 	UPROPERTY(EditDefaultsOnly)
 	UParticleSystem* BulletParticleSystem;
+
+	UPROPERTY(EditDefaultsOnly)
+	USoundBase* BulletSound;
 
 	UPROPERTY(EditDefaultsOnly)
 	float MaxRange = 1000.0f;
