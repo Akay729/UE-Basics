@@ -46,39 +46,49 @@ void AGun::PullTrigger()
 	UGameplayStatics::SpawnEmitterAttached(MuzzleParticleSystem, GunMesh, TEXT("MuzzleFlashSocket"));
 	//DrawDebugCamera(GetWorld(), GetActorLocation(), GetActorRotation(), 90, 1,  FColor::Green, true);
 
-	APawn* OwnerPawn = Cast<APawn>(GetOwner());
-	if(OwnerPawn == nullptr) return;
-	AController* OwnerController = OwnerPawn->GetController();
-	if (OwnerController == nullptr) return;
-
-
-	FVector ViewPointLocation;
-	FRotator ViewPointRotation;
-	
-	OwnerController->GetPlayerViewPoint(ViewPointLocation, ViewPointRotation);
-	FVector EndPoint = ViewPointLocation + ViewPointRotation.Vector() * MaxRange; //Questo non riuscivo a capirlo
-	
-	//DrawDebugCamera(GetWorld(), ViewPointLocation, ViewPointRotation, 0, 1, FColor::Red, false, 2.0f);
-	//DrawDebugLine(GetWorld(), ViewPointLocation, EndPoint, FColor::Red, false, 2.0f);
-	
 	FHitResult HitResult;
-	Params.AddIgnoredActor(this);
-	Params.AddIgnoredActor(OwnerPawn);
-	bool isHit = GetWorld()->LineTraceSingleByChannel(HitResult, ViewPointLocation, EndPoint, ECC_Bullet, Params);
-	
-	if(isHit)
+	FVector ShotDirection;
+	bool isSuccess = GunTrace(HitResult, ShotDirection);
+	if(isSuccess)
 	{
 		//DrawDebugLine(GetWorld(), ViewPointLocation, HitResult.ImpactPoint, FColor::Green, false, 2.0f);
-		FVector ShotDirection = ViewPointRotation.Vector();
+		
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), BulletParticleSystem,  HitResult.ImpactPoint, ShotDirection.Rotation(), true);
 		
 		AActor* HitActor = HitResult.GetActor();
 		if (HitActor)
 		{
 			FPointDamageEvent DamageEvent(Damage, HitResult, ShotDirection, nullptr);
+			AController* OwnerController = GetOwnerController();
 			HitActor->TakeDamage(Damage, DamageEvent, OwnerController, this);
 		}
 		
 	}
 
+}
+
+bool AGun::GunTrace(FHitResult &HitResult, FVector& ShotDirection)
+{
+	AController* OwnerController = GetOwnerController();
+	if (OwnerController == nullptr) return false;
+	
+	FVector ViewPointLocation;
+	FRotator ViewPointRotation;
+	
+	OwnerController->GetPlayerViewPoint(ViewPointLocation, ViewPointRotation);
+	FVector EndPoint = ViewPointLocation + ViewPointRotation.Vector() * MaxRange; //Questo non riuscivo a capirlo
+	ShotDirection = ViewPointRotation.Vector();
+	
+	Params.AddIgnoredActor(this);
+	Params.AddIgnoredActor(GetOwner());
+	bool isHit = GetWorld()->LineTraceSingleByChannel(HitResult, ViewPointLocation, EndPoint, ECC_Bullet, Params);
+	return isHit;
+}
+
+AController *AGun::GetOwnerController()
+{
+	APawn* OwnerPawn = Cast<APawn>(GetOwner());
+	if(OwnerPawn == nullptr) return;
+	return OwnerPawn->GetController();
+    
 }

@@ -47,6 +47,10 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	float Damage = 10.f;
+	
 	FCollisionQueryParams Params;
 
+	bool GunTrace(FHitResult& HitResult, FVector& ShotDirection);
+
+	AController* GetOwnerController();
 };
