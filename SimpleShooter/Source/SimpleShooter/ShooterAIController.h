@@ -19,6 +19,8 @@ class SIMPLESHOOTER_API AShooterAIController : public AAIController
 public:
 	virtual void Tick(float DealtaTime) override;
 
+	bool IsDead() const;
+	
 protected:
 	virtual void BeginPlay() override;
 	
@@ -33,5 +35,6 @@ protected:
 
 private:
  	UBlackboardComponent* BBComp;
+
 
 };

@@ -130,3 +130,8 @@ bool AShooterCharacter::IsDead() const
 {
 	return Healt <= 0.f;
 }
+
+float AShooterCharacter::GetHealtPercent() const
+{
+    return Healt/Maxhealt;
+}

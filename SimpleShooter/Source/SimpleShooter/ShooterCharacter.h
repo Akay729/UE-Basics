@@ -64,6 +64,9 @@ public:
 	
 	UFUNCTION(BlueprintPure)
 	bool IsDead() const;
+	
+	UFUNCTION(BlueprintPure)
+	float GetHealtPercent() const;
 
 	//Action
 	void FireAction();

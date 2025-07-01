@@ -9,13 +9,45 @@ void AShooterPlayerController::GameHasEnded(AActor* EndGameFocus, bool bIsWinner
 {
     Super::GameHasEnded(EndGameFocus, bIsWinner);
     // UE_LOG(LogTemp, Display, TEXT("Shooter PC"));
-
-    UUserWidget* LoseScreen = CreateWidget(this, LoseScreenClass);
-    if (LoseScreen != nullptr)
+    UUserWidget* HUD = CreateWidgetFromClass(HUDScreenClass);
+    if (HUD)
     {
-        LoseScreen->AddToViewport();
+        HUD->RemoveFromViewport();
+    }
+    if(bIsWinner)
+    {
+        UUserWidget* WinScreen = CreateWidget(this, WinScreenClass);
+        if (WinScreen != nullptr)
+        {
+            WinScreen->AddToViewport();
+        }  
+    }
+    else
+    {
+        UUserWidget* LoseScreen = CreateWidget(this, LoseScreenClass);
+        if (LoseScreen != nullptr)
+        {
+            LoseScreen->AddToViewport();
+        }
     }
     
 
     GetWorldTimerManager().SetTimer(RestartTimer, this, &APlayerController::RestartLevel, RestartDelay);
+}
+
+void AShooterPlayerController::BeginPlay()
+{
+    
+    UUserWidget* HUD = CreateWidgetFromClass(HUDScreenClass);
+    if (HUD != nullptr)
+    {
+        HUD->AddToViewport();
+    }  
+}
+
+UUserWidget* AShooterPlayerController::CreateWidgetFromClass(TSubclassOf<class UUserWidget> WidgetClass)
+{
+    if (!WidgetClass) return nullptr;
+    UUserWidget* widget = CreateWidget(this, WidgetClass);
+    return widget;
 }
