@@ -11,6 +11,7 @@
 #include "InputActionValue.h"
 #include "Animations/PlayerAnimInstance.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Combat/CombatComponent.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateMainCharacter);
 
@@ -59,6 +60,9 @@ void AMainCharacter::BeginPlay()
 	PlayerAnimInstance = Cast<UPlayerAnimInstance>(GetMesh()->GetAnimInstance());
 	if (!PlayerAnimInstance) return;
 
+	CombatComponent = FindComponentByClass<UCombatComponent>();
+	if (!CombatComponent) return;
+
 }
 //////////////////////////////////////////////////////////////////////////
 // Input
@@ -92,6 +96,9 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AMainCharacter::Look);
+
+		// Attacking
+		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Started, this, &AMainCharacter::Attack);
 	}
 	else
 	{
@@ -135,4 +142,19 @@ void AMainCharacter::Look(const FInputActionValue& Value)
 	}
 }
 
+void AMainCharacter::Attack()
+{
+	if (!CombatComponent) return;
+	CombatComponent->ComboAttack();
+	UE_LOG(LogTemp, Display, TEXT("Attack called"));
 
+}
+
+
+// Interface implementation
+float AMainCharacter::GetDamage()
+{
+	return 10.0f;
+	/* if (!CombatComponent) 
+	return CombatComponent->GetDamage(); */
+}

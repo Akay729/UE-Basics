@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
 #include "Interfaces/MainPlayer.h"
+#include "Interfaces/Fighter.h"
 #include "MainCharacter.generated.h"
 
 class USpringArmComponent;
@@ -14,13 +15,14 @@ class UInputMappingContext;
 class UInputAction;
 class UPlayerAnimInstance;
 class USkeletalMeshComponent;
+class UCombatComponent;
 struct FInputActionValue;
 
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateMainCharacter, Log, All);
 
 UCLASS()
-class ACTIONCOMBAT_API AMainCharacter : public ACharacter, public IMainPlayer
+class ACTIONCOMBAT_API AMainCharacter : public ACharacter, public IMainPlayer, public IFighter
 {
 	GENERATED_BODY()
 
@@ -48,6 +50,10 @@ class ACTIONCOMBAT_API AMainCharacter : public ACharacter, public IMainPlayer
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* LookAction;
 
+	/** Attack Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* AttackAction;
+
 public:
 	AMainCharacter();
 
@@ -60,6 +66,11 @@ protected:
 
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
+
+	void Attack();
+
+	UPROPERTY(BlueprintReadOnly)
+	UCombatComponent* CombatComponent;
 
 	UPROPERTY(BlueprintReadOnly)
 	UPlayerAnimInstance* PlayerAnimInstance;
@@ -76,4 +87,5 @@ public:
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
+	virtual float GetDamage() override;
 };

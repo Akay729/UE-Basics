@@ -9,6 +9,7 @@
 class USkeletalMeshComponent;
 class FCollisonQueryParams;
 
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class ACTIONCOMBAT_API UTraceComponent : public UActorComponent
 {
@@ -25,20 +26,34 @@ class ACTIONCOMBAT_API UTraceComponent : public UActorComponent
 	UPROPERTY(EditAnywhere)
 	FName Roatation;
 
+	UPROPERTY(EditAnywhere)
+	bool bIsDebug {false};
+
+	TArray<AActor*> ActorToIgnore;
+
+	
 public:	
 	// Sets default values for this component's properties
 	UTraceComponent();
-
+	
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
-
-	FCollisonQueryParams Params;
-
-
+	
+	FCollisionQueryParams Params;
+	
+	UPROPERTY(EditAnywhere)
+	float BoxCollisionLength {100.0f};
+	
+	
+	/* 	UPROPERTY(EditAnywhere)
+	float BoxCollisionWidth {50.0f}; */
+	
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
+	
+	UFUNCTION(BlueprintCallable)
+	void HandleResetAttack();
 		
 };

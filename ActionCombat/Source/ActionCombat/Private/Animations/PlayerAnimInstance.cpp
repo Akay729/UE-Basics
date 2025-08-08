@@ -3,7 +3,7 @@
 
 #include "Animations/PlayerAnimInstance.h"
 #include "GameFramework/Pawn.h"
-#include "Kismet/KismetAnimationLibrary.h"
+//#include "Kismet/KismetAnimationLibrary.h"
 
 
 void UPlayerAnimInstance::UpdateCurrentSpeed()
@@ -28,5 +28,6 @@ void UPlayerAnimInstance::UpdateDirection()
     if(!bIsInCombat) return;
 
     // need to be replaced with UKismetAnimationLibrary::CalculateDirection
-    CurrentDirection = UKismetAnimationLibrary::CalculateDirection(PawnRef->GetVelocity(), PawnRef->GetActorRotation());
+    // AnimGraphRuntime va incluso nel progetto
+    CurrentDirection = CalculateDirection(PawnRef->GetVelocity(), PawnRef->GetActorRotation());
 }

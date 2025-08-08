@@ -3,6 +3,11 @@
 
 #include "Combat/TraceComponent.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Interfaces/Enemy.h"
+#include "Interfaces/Fighter.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "Kismet/KismetSystemLibrary.h"
+#include "Engine/DamageEvents.h"
 
 #define ECC_Fight ECC_GameTraceChannel1
 
@@ -25,6 +30,8 @@ void UTraceComponent::BeginPlay()
 	if (!SkeletalComponent) return;
 
 	Params.AddIgnoredActor(GetOwner());
+	Params.TraceTag = FName(TEXT("IngoreTrace"));
+	Params.bTraceComplex = false;
 }
 
 
@@ -37,6 +44,13 @@ void UTraceComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 	FVector EndSocketLocation {SkeletalComponent->GetSocketLocation(WeaponEnd)};
 	FQuat ShapeRotation {SkeletalComponent->GetSocketQuaternion(Roatation)};
 
+	double DistanceStartEnd = FVector::Distance(StartSocketLocaiton, EndSocketLocation);
+
+	FVector BoxHalfExtent {DistanceStartEnd, BoxCollisionLength, BoxCollisionLength}; // Half-height for the box
+	BoxHalfExtent *= 0.5f;
+
+	FCollisionShape BoxShape = FCollisionShape::MakeBox(BoxHalfExtent);
+
 	TArray<FHitResult> HitResults;
 
 	bool isHit =  GetWorld()->SweepMultiByChannel(
@@ -45,15 +59,85 @@ void UTraceComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 		EndSocketLocation, 
 		ShapeRotation, 
 		ECC_Fight, 
-		FCollisionShape::MakeSphere(50.0f), // Assuming a sphere shape for the trace
+		BoxShape, // Assuming a sphere shape for the trace
 		FCollisionQueryParams::DefaultQueryParam
-	)
+	);
+	/* if (isHit)
+	{
+		for (const FHitResult& Hit : HitResults)
+		{
+			AActor* CurrentHitActor = Hit.GetActor();
+			UE_LOG(LogTemp, Warning, TEXT("Hit Actor: %s"), *CurrentHitActor->GetName());
+			if (CurrentHitActor && CurrentHitActor->Implements<UFighter>())
+			{
+				IFighter::Execute_GetDamage(CurrentHitActor);
+				// Handle the hit actor, e.g., apply damage or log it
+				//UE_LOG(LogTemp, Warning, TEXT("Hit Actor: %s"), *Hit.GetActor()->GetName());
+			}
+		}
+	} */
 
-	UE_LOG(
+	if (HitResults.Num() > 0)
+	{
+		float CharacterDamage = {};
+		IFighter* FighterInterface = Cast<IFighter>(GetOwner());
+		if (FighterInterface)
+		{
+			CharacterDamage = FighterInterface->GetDamage();
+			UE_LOG(LogTemp, Warning, TEXT("Character Damage: %f"), CharacterDamage);
+		}
+
+		FDamageEvent DamageEvent;
+		//TSet<FHitResult> HitResultsSet(HitResults);
+
+		for (const FHitResult& Hit : HitResults)
+		{
+			AActor* CurrentHitActor = Hit.GetActor();
+
+			if (ActorToIgnore.Contains(CurrentHitActor)) continue;
+
+			CurrentHitActor->TakeDamage(
+				CharacterDamage, 
+				DamageEvent, 
+				GetOwner()->GetInstigatorController(), 
+				GetOwner()
+			);
+
+			ActorToIgnore.AddUnique(CurrentHitActor);
+		}
+	}
+
+	if (bIsDebug)
+	{	
+		UE_LOG(
 		LogTemp, Warning, 
 		TEXT("Start: %s, End: %s, Rotation: %s"), 
 		*StartSocketLocaiton.ToString(), 
 		*EndSocketLocation.ToString(), 
-		*ShapeRotation.Rotator().ToString());
-}
+		*ShapeRotation.Rotator().ToString()); 
 
+		FVector CenterPoint {
+			UKismetMathLibrary::VLerp(
+				StartSocketLocaiton, 
+				EndSocketLocation, 
+				0.5f
+			)
+		};
+		
+		UKismetSystemLibrary::DrawDebugBox(
+			GetWorld(), 
+			CenterPoint, 
+			BoxShape.GetExtent(),
+			isHit ? FColor::Green : FColor::Red,
+			ShapeRotation.Rotator(),
+			1.0f,
+			2.0f
+		);
+	}
+}
+	 
+void UTraceComponent::HandleResetAttack()
+{
+	// Reset the attack state after the montage ends
+	ActorToIgnore.Empty();
+}
