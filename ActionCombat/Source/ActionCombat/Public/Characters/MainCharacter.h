@@ -5,18 +5,22 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
+#include "Interfaces/MainPlayer.h"
 #include "MainCharacter.generated.h"
 
 class USpringArmComponent;
 class UCameraComponent;
 class UInputMappingContext;
 class UInputAction;
+class UPlayerAnimInstance;
+class USkeletalMeshComponent;
 struct FInputActionValue;
+
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateMainCharacter, Log, All);
 
 UCLASS()
-class ACTIONCOMBAT_API AMainCharacter : public ACharacter
+class ACTIONCOMBAT_API AMainCharacter : public ACharacter, public IMainPlayer
 {
 	GENERATED_BODY()
 
@@ -46,16 +50,19 @@ class ACTIONCOMBAT_API AMainCharacter : public ACharacter
 
 public:
 	AMainCharacter();
-	
 
 protected:
 
+	virtual void BeginPlay() override;
+	
 	/** Called for movement input */
 	void Move(const FInputActionValue& Value);
 
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
-			
+
+	UPROPERTY(BlueprintReadOnly)
+	UPlayerAnimInstance* PlayerAnimInstance;
 
 protected:
 

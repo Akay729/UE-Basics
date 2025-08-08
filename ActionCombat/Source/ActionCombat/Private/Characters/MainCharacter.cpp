@@ -9,6 +9,8 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "Animations/PlayerAnimInstance.h"
+#include "Components/SkeletalMeshComponent.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateMainCharacter);
 
@@ -51,8 +53,16 @@ AMainCharacter::AMainCharacter()
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 }
 
+void AMainCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+	PlayerAnimInstance = Cast<UPlayerAnimInstance>(GetMesh()->GetAnimInstance());
+	if (!PlayerAnimInstance) return;
+
+}
 //////////////////////////////////////////////////////////////////////////
 // Input
+
 
 void AMainCharacter::NotifyControllerChanged()
 {
@@ -89,7 +99,7 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	}
 }
 
-void AMainCharacter::Move(const FInputActionValue& Value)
+void AMainCharacter::Move(const FInputActionValue &Value) 
 {
 	// input is a Vector2D
 	FVector2D MovementVector = Value.Get<FVector2D>();

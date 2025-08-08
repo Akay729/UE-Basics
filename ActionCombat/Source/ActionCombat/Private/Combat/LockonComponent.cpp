@@ -5,6 +5,8 @@
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "Interfaces/Enemy.h"
 
 #define ECC_Fight ECC_GameTraceChannel1
 
@@ -30,16 +32,48 @@ void ULockonComponent::BeginPlay()
 	{
 		OwnerController = Cast<APlayerController>(OwnerCharacter->GetController());
 		OwnerMovementComponent = OwnerCharacter->GetCharacterMovement();
+		CameraBoom = OwnerCharacter->FindComponentByClass<USpringArmComponent>();
 	}
 	
 }
 
-void ULockonComponent::StartLockOn(float SphereRadius, float Range)
+// Called every frame
+void ULockonComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
+{
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	// If we have a target, rotate towards it
+	if (CurrentTargetActor != nullptr && OwnerCharacter != nullptr)
+	{
+		FVector CurrentLocation = OwnerCharacter->GetActorLocation();
+		FVector TargetLocation = CurrentTargetActor->GetActorLocation();
+		double DistanceToTarget = FVector::Dist(CurrentLocation, TargetLocation);
+
+		if( DistanceToTarget > BreakDistance)
+		{
+			EndBlock();
+			return;
+		}
+		
+		TargetLocation.Z -= 125.0f; // Adjust height to look at the target's head
+
+		FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(CurrentLocation, TargetLocation);
+
+		//OwnerCharacter->SetActorRotation(FRotator(0.0f, LookAtRotation.Yaw, 0.0f));
+		OwnerController->SetControlRotation(LookAtRotation);
+
+
+	}
+	
+}
+
+
+void ULockonComponent::StartLockOn(float SphereRadius, float SweepRange)
 {
 	if (!OwnerCharacter) return;
 	FHitResult HitResult;
 	FVector Start = OwnerCharacter->GetActorLocation();
-	FVector End = Start + OwnerCharacter->GetActorForwardVector() * Range;
+	FVector End = Start + OwnerCharacter->GetActorForwardVector() * SweepRange;
 	FCollisionShape Sphere {FCollisionShape::MakeSphere(SphereRadius)};
 	Params.AddIgnoredActor(OwnerCharacter);
 	Params.TraceTag = FName(TEXT("LockonTrace"));
@@ -56,33 +90,52 @@ void ULockonComponent::StartLockOn(float SphereRadius, float Range)
 	);
 
 	if (!isHit) return;
+	if (!HitResult.GetActor()->Implements<UEnemy>()) return;
 	
 	CurrentTargetActor = HitResult.GetActor();
 
-	UE_LOG(LogTemp, Warning, TEXT("Lockon Hit: %s"), *CurrentTargetActor->GetName());
 	OwnerController->SetIgnoreLookInput(true);
 	OwnerMovementComponent->bOrientRotationToMovement = false;
 	OwnerMovementComponent->bUseControllerDesiredRotation = true;
 	
-	FRotator NewRotation = UKismetMathLibrary::FindLookAtRotation(Start, CurrentTargetActor->GetActorLocation());
+	CameraBoom->TargetOffset = FVector(0.0f, 0.0f, 100.0f);
 	//OwnerCharacter->SetActorRotation(FRotator(0.0f, HitResult.ImpactNormal.Rotation().Yaw, 0.0f));
 
+	//Show Lockon Widget or any other visual feedback here
+	IEnemy::Execute_OnSelect(CurrentTargetActor);
+	OnUpdatedTargetDelegate.Broadcast(CurrentTargetActor);
+
+	UE_LOG(LogTemp, Warning, TEXT("Lockon Hit: %s"), *CurrentTargetActor->GetName());
+
 
 }
 
-// Called every frame
-void ULockonComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void ULockonComponent::EndBlock()
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	if(!OwnerCharacter) return;
+	// Reset the lock-on state
+	UE_LOG(LogTemp, Warning, TEXT("Lockon Ended: %s"), *CurrentTargetActor->GetName());
 
-	// If we have a target, rotate towards it
-	if (CurrentTargetActor != nullptr && OwnerCharacter != nullptr)
-	{
-		FVector TargetLocation = CurrentTargetActor->GetActorLocation();
-		FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(OwnerCharacter->GetActorLocation(), TargetLocation);
-		//OwnerCharacter->SetActorRotation(FRotator(0.0f, LookAtRotation.Yaw, 0.0f));
-		OwnerController->SetControlRotation(FRotator(0.0f, LookAtRotation.Yaw, 0.0f));
-	}
+	IEnemy::Execute_OnDeselect(CurrentTargetActor);
 	
+	CurrentTargetActor = nullptr;
+	OwnerController->SetIgnoreLookInput(false);
+	OwnerMovementComponent->bOrientRotationToMovement = true;
+	OwnerMovementComponent->bUseControllerDesiredRotation = false;
+	CameraBoom->TargetOffset = FVector::ZeroVector;
+	OwnerController->ResetIgnoreLookInput(); 
+
+	OnUpdatedTargetDelegate.Broadcast(CurrentTargetActor);
 }
 
+void ULockonComponent::ToggleLockOn(float SphereRadius, float SweepRange)
+{
+	if (CurrentTargetActor)
+	{
+		EndBlock();
+	}
+	else
+	{
+		StartLockOn(SphereRadius, SweepRange);
+	}
+}

@@ -17,8 +17,22 @@ class ACTIONCOMBAT_API UPlayerAnimInstance : public UAnimInstance
 protected:
 	/** The speed of the character */
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Animation Properties")
-	float CurrentVelocity {0.0f};
+	float CurrentSpeed {0.0f};
 
 	UFUNCTION(BlueprintCallable, Category = "Animation Properties")
-	void UpdateCurrentVelocity();
+	void UpdateCurrentSpeed();
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Animation Properties")
+	bool bIsInCombat {false};
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Animation Properties")
+	float CurrentDirection {0.0f};
+
+public:
+
+	UFUNCTION(BlueprintCallable)
+	void HandleUpdateTarget(AActor* TargetActor);
+	
+	UFUNCTION(BlueprintCallable)
+	void UpdateDirection();
 };
