@@ -40,6 +40,8 @@ void UTraceComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	if (!bIsAttacking) return;
+	
 	FVector StartSocketLocaiton {SkeletalComponent->GetSocketLocation(WeaponStart)};
 	FVector EndSocketLocation {SkeletalComponent->GetSocketLocation(WeaponEnd)};
 	FQuat ShapeRotation {SkeletalComponent->GetSocketQuaternion(Roatation)};
@@ -79,7 +81,7 @@ void UTraceComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 
 	if (HitResults.Num() > 0)
 	{
-		float CharacterDamage = {};
+		float CharacterDamage {};
 		IFighter* FighterInterface = Cast<IFighter>(GetOwner());
 		if (FighterInterface)
 		{
