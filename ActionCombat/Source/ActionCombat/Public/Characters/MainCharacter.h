@@ -16,6 +16,12 @@ class UInputAction;
 class UPlayerAnimInstance;
 class USkeletalMeshComponent;
 class UCombatComponent;
+class UStatsComponent;
+class ULockonComponent;
+class UTraceComponent;
+class UBlockComponent;
+class UPlayerActionsComponent;
+
 struct FInputActionValue;
 
 
@@ -57,6 +63,24 @@ class ACTIONCOMBAT_API AMainCharacter : public ACharacter, public IMainPlayer, p
 public:
 	AMainCharacter();
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UStatsComponent* StatsComponent;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UCombatComponent* CombatComponent;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	ULockonComponent* LockonComponent;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UTraceComponent* TraceComponent;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UBlockComponent* BlockComponent;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPlayerActionsComponent* PlayerActionsComponent;
+
 protected:
 
 	virtual void BeginPlay() override;
@@ -69,8 +93,8 @@ protected:
 
 	void Attack();
 
-	UPROPERTY(BlueprintReadOnly)
-	UCombatComponent* CombatComponent;
+	/* UPROPERTY(BlueprintReadOnly)
+	UCombatComponent* CombatComponent; */
 
 	UPROPERTY(BlueprintReadOnly)
 	UPlayerAnimInstance* PlayerAnimInstance;
@@ -87,5 +111,6 @@ public:
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
+	// Fighter Interface
 	virtual float GetDamage() override;
 };

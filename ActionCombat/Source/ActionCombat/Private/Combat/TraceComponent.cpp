@@ -86,7 +86,6 @@ void UTraceComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 		if (FighterInterface)
 		{
 			CharacterDamage = FighterInterface->GetDamage();
-			UE_LOG(LogTemp, Warning, TEXT("Character Damage: %f"), CharacterDamage);
 		}
 
 		FDamageEvent DamageEvent;

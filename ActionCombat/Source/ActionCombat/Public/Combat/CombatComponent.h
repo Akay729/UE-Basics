@@ -8,6 +8,13 @@
 
 class UAnimMontage;
 
+
+DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_OneParam(
+	FOnAttackPerformedSignature, 
+	UCombatComponent, OnAttackPerformedDelegate,
+	float, StaminaCostValue
+);
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class ACTIONCOMBAT_API UCombatComponent : public UActorComponent
 {
@@ -23,17 +30,22 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	int32 CurrentComboIndex {0};
 
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	float StaminaCost {10.0f};
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
 	bool bCanAttack {true};
 	
-	protected:
+	UPROPERTY(BlueprintAssignable)
+	FOnAttackPerformedSignature OnAttackPerformedDelegate;
+protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 	
 	
 	UPROPERTY()
 	ACharacter* Owner;
+
 	
 public:	
 

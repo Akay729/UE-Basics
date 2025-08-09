@@ -2,12 +2,17 @@
 
 
 #include "Characters/BoosCharacter.h"
+#include "Characters/StatsComponent.h"
 
 // Sets default values
 ABoosCharacter::ABoosCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	// Create Combata Component
+	StatsComponent = CreateDefaultSubobject<UStatsComponent>(TEXT("StatsComponent"));
+
 
 }
 
@@ -32,3 +37,9 @@ void ABoosCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 }
 
+// IEnemy Interface
+float ABoosCharacter::GetDamage()
+{
+	// Implement the logic to return the damage value for this character
+	return 10.0f; // Example value, replace with actual logic
+}

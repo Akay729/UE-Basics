@@ -11,7 +11,15 @@
 #include "InputActionValue.h"
 #include "Animations/PlayerAnimInstance.h"
 #include "Components/SkeletalMeshComponent.h"
+
+#include "Characters/StatsComponent.h"
+#include "Characters/EStat.h"
+#include "Characters/PlayerActionsComponent.h"
+
 #include "Combat/CombatComponent.h"
+#include "Combat/LockonComponent.h"
+#include "Combat/TraceComponent.h"
+#include "Combat/BlockComponent.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateMainCharacter);
 
@@ -50,6 +58,24 @@ AMainCharacter::AMainCharacter()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
+	// Create StatsComponent
+	StatsComponent = CreateDefaultSubobject<UStatsComponent>(TEXT("Stats Component"));
+
+	// Create CombatComponent
+	CombatComponent = CreateDefaultSubobject<UCombatComponent>(TEXT("Combat Component"));
+
+	// Create LockonComponent
+	LockonComponent = CreateDefaultSubobject<ULockonComponent>(TEXT("Lockon Component"));
+
+	// Create TraceComponent
+	TraceComponent = CreateDefaultSubobject<UTraceComponent>(TEXT("Trace Component"));
+
+	// Create BlockComponent
+	BlockComponent = CreateDefaultSubobject<UBlockComponent>(TEXT("Block Component"));
+
+	// Create PlayerActionComponent
+	PlayerActionsComponent = CreateDefaultSubobject<UPlayerActionsComponent>(TEXT("Player Action Component"));
+
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 }
@@ -59,9 +85,6 @@ void AMainCharacter::BeginPlay()
 	Super::BeginPlay();
 	PlayerAnimInstance = Cast<UPlayerAnimInstance>(GetMesh()->GetAnimInstance());
 	if (!PlayerAnimInstance) return;
-
-	CombatComponent = FindComponentByClass<UCombatComponent>();
-	if (!CombatComponent) return;
 
 }
 //////////////////////////////////////////////////////////////////////////
@@ -144,7 +167,6 @@ void AMainCharacter::Look(const FInputActionValue& Value)
 
 void AMainCharacter::Attack()
 {
-	if (!CombatComponent) return;
 	CombatComponent->ComboAttack();
 	UE_LOG(LogTemp, Display, TEXT("Attack called"));
 
@@ -154,7 +176,5 @@ void AMainCharacter::Attack()
 // Interface implementation
 float AMainCharacter::GetDamage()
 {
-	return 10.0f;
-	/* if (!CombatComponent) 
-	return CombatComponent->GetDamage(); */
+	return StatsComponent->Stats[EStats::Strength];
 }

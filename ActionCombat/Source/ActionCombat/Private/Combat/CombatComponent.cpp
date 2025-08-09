@@ -43,6 +43,8 @@ void UCombatComponent::ComboAttack()
 		-1,
 		(MaxCombo - 1)
 	);
+
+	OnAttackPerformedDelegate.Broadcast(StaminaCost);
 }
 
 void UCombatComponent::HandleResetAttck()
