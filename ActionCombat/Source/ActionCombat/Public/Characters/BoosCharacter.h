@@ -36,4 +36,6 @@ public:
 	// IEnemy Interface
 	virtual float GetDamage() override;
 
+	UFUNCTION(BlueprintCallable)
+	void DetectedPawn(APawn* PawnDetected, APawn* PawnWanted);
 };

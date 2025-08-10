@@ -17,7 +17,7 @@ class ACTIONCOMBAT_API UToggleTraceNotifyState : public UAnimNotifyState
 	GENERATED_BODY()
 
 public:
-	UTraceComponent* GetTracaeComponent(USkeletalMeshComponent* MeshComp);
+	UTraceComponent* GetTraceComponent(USkeletalMeshComponent* MeshComp);
 
 	// Override the NotifyBegin and NotifyEnd methods to toggle the trace component's attack state
 	virtual void NotifyBegin(USkeletalMeshComponent * MeshComp, UAnimSequenceBase * Animation, float TotalDuration,  const FAnimNotifyEventReference& EventReference) override;

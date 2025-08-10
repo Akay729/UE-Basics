@@ -43,3 +43,15 @@ float ABoosCharacter::GetDamage()
 	// Implement the logic to return the damage value for this character
 	return 10.0f; // Example value, replace with actual logic
 }
+
+void ABoosCharacter::DetectedPawn(APawn* PawnDetected, APawn* PawnWanted)
+{
+    if (PawnDetected == PawnWanted)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Detected Same Pawn"));
+    }
+    else
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Detected different Pawn: %s, Wanted: %s"), *PawnDetected->GetName(), *PawnWanted->GetName());
+    }
+}
