@@ -2,6 +2,10 @@
 
 
 #include "Characters/PlayerActionsComponent.h"
+#include "GameFramework/Character.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "Characters/PlayerActionsComponent.h"
+#include "Interfaces/MainPlayer.h"
 
 // Sets default values for this component's properties
 UPlayerActionsComponent::UPlayerActionsComponent()
@@ -19,6 +23,18 @@ void UPlayerActionsComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	OwnerCharacter = GetOwner<ACharacter>();
+	if (!OwnerCharacter) return;
+
+	// Get the MainPlayer interface
+	if (!OwnerCharacter->Implements<UMainPlayer>()) return;
+	MainPlayerInterface = Cast<IMainPlayer>(OwnerCharacter);
+	
+
+	CharacterMovement = OwnerCharacter->FindComponentByClass<UCharacterMovementComponent>();
+	if (!CharacterMovement) return;
+
+
 	// ...
 	
 }
@@ -32,3 +48,31 @@ void UPlayerActionsComponent::TickComponent(float DeltaTime, ELevelTick TickType
 	// ...
 }
 
+void UPlayerActionsComponent::Sprint()
+{
+	if (!MainPlayerInterface->HasEnoughStamina(SprintStaminaCost)) 
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Not enough stamina to sprint!"));
+		Walk();
+		return;
+	}
+
+	if (CharacterMovement->Velocity.Equals(FVector::ZeroVector, 1.f)) 
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot sprint while not moving!"));
+		return;
+	}
+
+
+	
+	CharacterMovement->MaxWalkSpeed = SprintWalkSpeed;
+
+	OnSprintDelegate.Broadcast(SprintStaminaCost);
+	//OwnerCharacter->StatsComponent->ReduceStamina(SprintStaminaCost);
+
+}
+
+void UPlayerActionsComponent::Walk()
+{
+	CharacterMovement->MaxWalkSpeed = DefaultWalkSpeed;
+}

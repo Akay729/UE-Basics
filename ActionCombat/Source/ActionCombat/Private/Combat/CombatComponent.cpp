@@ -4,6 +4,7 @@
 #include "Animation/AnimMontage.h"
 #include "Combat/CombatComponent.h"
 #include "GameFramework/Character.h"
+#include "Interfaces/MainPlayer.h"
 #include "Kismet/KismetMathLibrary.h"
 
 
@@ -29,6 +30,16 @@ void UCombatComponent::BeginPlay()
 
 void UCombatComponent::ComboAttack()
 {
+	if (Owner->Implements<UMainPlayer>())
+	{
+		IMainPlayer* MainPlayerInterface = Cast<IMainPlayer>(Owner);
+		if (MainPlayerInterface && !MainPlayerInterface->HasEnoughStamina(StaminaCost))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Not enough stamina to perform attack!"));
+			return;
+		}
+	}
+
 	if (!bCanAttack) return;
 	bCanAttack = false;
 

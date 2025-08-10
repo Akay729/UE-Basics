@@ -113,4 +113,8 @@ public:
 
 	// Fighter Interface
 	virtual float GetDamage() override;
+
+	// IMainPlayer Interface
+	virtual bool HasEnoughStamina(float StaminaCost) const override;
+	
 };

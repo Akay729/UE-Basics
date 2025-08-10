@@ -172,9 +172,14 @@ void AMainCharacter::Attack()
 
 }
 
-
-// Interface implementation
+// --------Fighter Interface implementation --------
 float AMainCharacter::GetDamage()
 {
 	return StatsComponent->Stats[EStats::Strength];
+}
+
+// --------IManinPlayer Interface Implementation--------
+bool AMainCharacter::HasEnoughStamina(float StaminaCost) const
+{
+	return StatsComponent->Stats[EStats::Stamina] >= StaminaCost;
 }

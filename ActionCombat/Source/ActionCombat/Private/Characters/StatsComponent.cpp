@@ -2,6 +2,8 @@
 
 
 #include "Characters/StatsComponent.h"
+#include "kismet/KismetMathLibrary.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 // Sets default values for this component's properties
 UStatsComponent::UStatsComponent()
@@ -46,4 +48,39 @@ void UStatsComponent::ReduceStamina(float Amount)
 {
 	float ReducedStamina = FMath::Clamp(Stats[EStats::Stamina] - Amount, 0.0f, Stats[EStats::MaxStamina]);
 	Stats[EStats::Stamina] = ReducedStamina;
+
+	bCanRegenerateStamina = false;
+
+	FLatentActionInfo LatentInfo
+	{
+		0,
+		100,
+		TEXT("EnableRegeration"), //Questo è il nome della funzione che verrà chiamata dopo il delay
+		this
+	};
+
+	UKismetSystemLibrary::RetriggerableDelay(
+		GetWorld(),
+		StaminaDelayDuration,
+		LatentInfo
+	);
+}
+
+void UStatsComponent::RestoreStamina()
+{
+	if (!bCanRegenerateStamina) return;
+	
+	Stats[EStats::Stamina] = UKismetMathLibrary::FInterpTo_Constant(
+		Stats[EStats::Stamina], 
+		Stats[EStats::MaxStamina], 
+		GetWorld()->GetDeltaSeconds(), 
+		StaminaRegenRate // Interpolation speed
+	);
+}
+
+
+//Funzione che viene chiamata dopo il delay per abilitare la rigenerazione della stamina
+void UStatsComponent::EnableRegeration()
+{
+	bCanRegenerateStamina = true;
 }

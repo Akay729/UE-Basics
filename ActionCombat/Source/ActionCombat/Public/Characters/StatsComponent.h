@@ -14,6 +14,15 @@ class ACTIONCOMBAT_API UStatsComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
+	UPROPERTY(EditAnywhere)
+	double StaminaRegenRate {5.0f}; // Rate at which stamina regenerates per second
+
+	UPROPERTY(VisibleAnywhere)
+	bool bCanRegenerateStamina {true}; // Flag to control stamina regeneration
+
+	UPROPERTY(EditAnywhere)
+	float StaminaDelayDuration {2.0f}; // Delay before stamina starts regenerating after being reduced
+
 public:	
 	// Sets default values for this component's properties
 	UStatsComponent();
@@ -35,4 +44,10 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void ReduceStamina(float Amount);	
+
+	UFUNCTION(BlueprintCallable)
+	void RestoreStamina();
+
+	UFUNCTION()
+	void EnableRegeration();
 };
