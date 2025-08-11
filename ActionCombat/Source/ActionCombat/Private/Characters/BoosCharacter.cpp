@@ -3,6 +3,9 @@
 
 #include "Characters/BoosCharacter.h"
 #include "Characters/StatsComponent.h"
+#include "Combat/EnemyProjectileComponent.h"
+#include "BehaviorTree/BlackboardComponent.h"
+#include "AIController.h"
 
 // Sets default values
 ABoosCharacter::ABoosCharacter()
@@ -12,7 +15,7 @@ ABoosCharacter::ABoosCharacter()
 
 	// Create Combata Component
 	StatsComponent = CreateDefaultSubobject<UStatsComponent>(TEXT("StatsComponent"));
-
+	EnemyProjectileComponent = CreateDefaultSubobject<UEnemyProjectileComponent>(TEXT("EnemyProjectileComponent"));
 
 }
 
@@ -21,6 +24,13 @@ void ABoosCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	AAIController* AIController = Cast<AAIController>(GetController());
+	if (!AIController) return;
+
+	BlackboardComponent = AIController->GetBlackboardComponent();
+	if(!IsValid(BlackboardComponent)) return; //Throw me errors :(
+	
+	BlackboardComponent->SetValueAsEnum(TEXT("CurrentState"), InitialState);
 }
 
 // Called every frame
@@ -46,12 +56,10 @@ float ABoosCharacter::GetDamage()
 
 void ABoosCharacter::DetectedPawn(APawn* PawnDetected, APawn* PawnWanted)
 {
-    if (PawnDetected == PawnWanted)
-    {
-        UE_LOG(LogTemp, Warning, TEXT("Detected Same Pawn"));
-    }
-    else
-    {
-        UE_LOG(LogTemp, Warning, TEXT("Detected different Pawn: %s, Wanted: %s"), *PawnDetected->GetName(), *PawnWanted->GetName());
-    }
+	if(!IsValid(BlackboardComponent)) return;
+	EEnemyState CurrentState = static_cast<EEnemyState>(BlackboardComponent->GetValueAsEnum(TEXT("CurrentState")));
+
+    if (PawnDetected != PawnWanted || CurrentState != EEnemyState::Idle) return;
+	UE_LOG(LogTemp, Warning, TEXT("Detected Same Pawn"));
+	BlackboardComponent->SetValueAsEnum(TEXT("CurrentState"), EEnemyState::Range);
 }

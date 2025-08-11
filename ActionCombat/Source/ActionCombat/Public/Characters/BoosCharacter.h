@@ -6,22 +6,31 @@
 #include "GameFramework/Character.h"
 #include "Interfaces/Enemy.h"
 #include "Interfaces/Fighter.h"
+#include "Characters/EEnemyState.h"
 #include "BoosCharacter.generated.h"
 
 class UStatsComponent;
+class UBlackboardComponent;
+class UEnemyProjectileComponent;
 
 UCLASS()
 class ACTIONCOMBAT_API ABoosCharacter : public ACharacter, public IEnemy, public IFighter
 {
 	GENERATED_BODY()
 
+	UPROPERTY(EditAnywhere)
+	TEnumAsByte<EEnemyState> InitialState;
+
+	UBlackboardComponent* BlackboardComponent;
 public:
 	// Sets default values for this character's properties
 	ABoosCharacter();
-
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stats")
 	UStatsComponent* StatsComponent;
-
+	
+	UPROPERTY(BlueprintReadOnly)
+	UEnemyProjectileComponent* EnemyProjectileComponent;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
