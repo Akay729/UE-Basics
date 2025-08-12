@@ -12,6 +12,7 @@
 class UStatsComponent;
 class UBlackboardComponent;
 class UEnemyProjectileComponent;
+class ULookAtPlayerComponent;
 
 UCLASS()
 class ACTIONCOMBAT_API ABoosCharacter : public ACharacter, public IEnemy, public IFighter
@@ -31,6 +32,10 @@ public:
 	
 	UPROPERTY(BlueprintReadOnly)
 	UEnemyProjectileComponent* EnemyProjectileComponent;
+
+	UPROPERTY(BlueprintReadOnly)
+	ULookAtPlayerComponent* LookAtPlayerComponent;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
