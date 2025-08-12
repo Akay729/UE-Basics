@@ -18,4 +18,12 @@ protected:
 	/** The speed of the character */
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Animation Properties")
 	float CurrentSpeed {0.0f};
+
+public:
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	bool bIsCharging {false};
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	bool bIsAttacking {false};
+	
 };
