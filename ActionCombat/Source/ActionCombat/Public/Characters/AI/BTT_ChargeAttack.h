@@ -6,6 +6,9 @@
 #include "BehaviorTree/BTTaskNode.h"
 #include "BTT_ChargeAttack.generated.h"
 
+/* class AAIController;
+class ACharacter; */
+class UBossAnimInstance;
 /**
  * 
  */
@@ -14,10 +17,17 @@ class ACTIONCOMBAT_API UBTT_ChargeAttack : public UBTTaskNode
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere)
-	UAnimMontage* ChargeAttackMontage;
+	AAIController* OwnerController;
+	ACharacter* OwnerCharacter;
+	UBossAnimInstance* BossAnim;
+
+protected:
+	virtual void TickTask ( UBehaviorTreeComponent & OwnerComp, uint8* NodeMemory, float DeltaSeconds ) override;
+
 
 public:
+	UBTT_ChargeAttack();
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 
+	void ChargeAtPlayer();
 };

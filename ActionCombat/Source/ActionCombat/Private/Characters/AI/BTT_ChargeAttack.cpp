@@ -4,14 +4,42 @@
 #include "Characters/AI/BTT_ChargeAttack.h"
 #include "AIController.h"
 #include "GameFramework/Character.h"
+#include "Animations/BossAnimInstance.h"
+#include "BehaviorTree/BlackboardComponent.h"
+
+
+UBTT_ChargeAttack::UBTT_ChargeAttack()
+{
+    bNotifyTick=true;
+}
+
+
+void UBTT_ChargeAttack::TickTask ( UBehaviorTreeComponent & OwnerComp, uint8* NodeMemory, float DeltaSeconds )
+{
+    bool bIsReadyToCharge = OwnerComp.GetBlackboardComponent()->GetValueAsBool(TEXT("IsReadyToCharge"));
+    if (bIsReadyToCharge)
+    {
+        OwnerComp.GetBlackboardComponent()->SetValueAsBool(TEXT("IsReadyToCharge"), false);
+        ChargeAtPlayer();
+    }
+    
+}
 
 EBTNodeResult::Type UBTT_ChargeAttack::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
-    ACharacter* OwnerCharacter {Cast<ACharacter>(OwnerComp.GetAIOwner()->GetPawn())};
+    OwnerController = OwnerComp.GetAIOwner();
+    OwnerCharacter = OwnerController->GetCharacter();
+    
+    BossAnim = Cast<UBossAnimInstance>(OwnerCharacter->GetMesh()->GetAnimInstance());
 
-    if (!IsValid(OwnerCharacter) || !ChargeAttackMontage) return EBTNodeResult::Failed;
+    BossAnim->bIsCharging = true;
+    OwnerComp.GetBlackboardComponent()->SetValueAsBool( TEXT("IsReadyToCharge"), false);
+
+    return EBTNodeResult::InProgress;
     
-    OwnerCharacter->PlayAnimMontage(ChargeAttackMontage);
-    return EBTNodeResult::Succeeded;
-    
+}
+
+void UBTT_ChargeAttack::ChargeAtPlayer()
+{
+    UE_LOG(LogTemp, Warning, TEXT("RUNNING"));
 }
