@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Combat/FTraceSockets.h"
 #include "TraceComponent.generated.h"
 
 class USkeletalMeshComponent;
@@ -18,14 +19,8 @@ class ACTIONCOMBAT_API UTraceComponent : public UActorComponent
 	USkeletalMeshComponent* SkeletalComponent;
 	
 	UPROPERTY(EditAnywhere)
-	FName WeaponStart;
-
-	UPROPERTY(EditAnywhere)
-	FName WeaponEnd;
-
-	UPROPERTY(EditAnywhere)
-	FName Roatation;
-
+	TArray<FTraceSockets> Sockets;
+	
 	UPROPERTY(EditAnywhere)
 	bool bIsDebug {false};
 

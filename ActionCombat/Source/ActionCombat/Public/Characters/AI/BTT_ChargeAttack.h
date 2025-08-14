@@ -21,6 +21,18 @@ class ACTIONCOMBAT_API UBTT_ChargeAttack : public UBTTaskNode
 	ACharacter* OwnerCharacter;
 	UBossAnimInstance* BossAnim;
 
+	UPROPERTY(EditAnywhere)
+	float AccetableRadius {150.f};
+
+	FScriptDelegate MoveCompletedDelegate;
+
+	float OriginalWalkSpeed;
+
+	UPROPERTY(EditAnywhere)
+	float ChargeWalkSpeed{2000.f};
+
+	bool bIsFinished{false};
+
 protected:
 	virtual void TickTask ( UBehaviorTreeComponent & OwnerComp, uint8* NodeMemory, float DeltaSeconds ) override;
 
@@ -30,4 +42,9 @@ public:
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 
 	void ChargeAtPlayer();
+
+	UFUNCTION()
+	void HandleMoveCompleted();
+
+	void FinishAttackTask();
 };

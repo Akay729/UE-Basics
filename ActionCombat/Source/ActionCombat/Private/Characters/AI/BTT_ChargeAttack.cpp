@@ -6,11 +6,14 @@
 #include "GameFramework/Character.h"
 #include "Animations/BossAnimInstance.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Navigation//PathFollowingComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 
 UBTT_ChargeAttack::UBTT_ChargeAttack()
 {
     bNotifyTick=true;
+    MoveCompletedDelegate.BindUFunction(this, "HandleMoveCompleted");
 }
 
 
@@ -23,10 +26,18 @@ void UBTT_ChargeAttack::TickTask ( UBehaviorTreeComponent & OwnerComp, uint8* No
         ChargeAtPlayer();
     }
     
+    if (bIsFinished)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Finished"));
+        OwnerController->ReceiveMoveCompleted.Remove(MoveCompletedDelegate);
+        FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
+    }
+    
 }
 
 EBTNodeResult::Type UBTT_ChargeAttack::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
+    bIsFinished = false;
     OwnerController = OwnerComp.GetAIOwner();
     OwnerCharacter = OwnerController->GetCharacter();
     
@@ -41,5 +52,45 @@ EBTNodeResult::Type UBTT_ChargeAttack::ExecuteTask(UBehaviorTreeComponent& Owner
 
 void UBTT_ChargeAttack::ChargeAtPlayer()
 {
-    UE_LOG(LogTemp, Warning, TEXT("RUNNING"));
+    APawn* PlayerRef { GetWorld()->GetFirstPlayerController()->GetPawn()};
+    FVector PlayerLocation{PlayerRef->GetActorLocation()};
+
+    FAIMoveRequest MoveRequest { PlayerLocation };
+    MoveRequest.SetUsePathfinding(true);
+    MoveRequest.SetAcceptanceRadius(AccetableRadius);
+
+    OwnerController->MoveTo(MoveRequest);
+    OwnerController->SetFocus(PlayerRef);
+    
+    UCharacterMovementComponent* OwnerMovementComponent = OwnerCharacter->FindComponentByClass<UCharacterMovementComponent>();
+    OriginalWalkSpeed = OwnerMovementComponent->MaxWalkSpeed;
+    OwnerMovementComponent->MaxWalkSpeed = ChargeWalkSpeed;
+
+    OwnerController->ReceiveMoveCompleted.AddUnique(MoveCompletedDelegate);
+
+}
+
+void UBTT_ChargeAttack::HandleMoveCompleted()
+{
+    BossAnim->bIsCharging = false;
+    BossAnim->bIsAttacking = true;
+
+    FTimerHandle AttackTimerHandle;
+    OwnerCharacter->GetWorldTimerManager().SetTimer(
+        AttackTimerHandle,
+        this,
+        &UBTT_ChargeAttack::FinishAttackTask,
+        1.f,
+        false
+    );
+
+    //Is the same of FindComponentByClass<UCharacterMovementComponent>() since this component is always present in character.
+    OwnerCharacter->GetCharacterMovement()->MaxWalkSpeed = OriginalWalkSpeed;
+}
+
+void UBTT_ChargeAttack::FinishAttackTask()
+{
+    //UE_LOG(LogTemp, Warning, TEXT("Finished"));
+    BossAnim->bIsAttacking = false;
+    bIsFinished = true;
 }

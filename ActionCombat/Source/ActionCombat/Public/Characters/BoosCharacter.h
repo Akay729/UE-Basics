@@ -13,6 +13,7 @@ class UStatsComponent;
 class UBlackboardComponent;
 class UEnemyProjectileComponent;
 class ULookAtPlayerComponent;
+class UTraceComponent;
 
 UCLASS()
 class ACTIONCOMBAT_API ABoosCharacter : public ACharacter, public IEnemy, public IFighter
@@ -35,6 +36,9 @@ public:
 
 	UPROPERTY(BlueprintReadOnly)
 	ULookAtPlayerComponent* LookAtPlayerComponent;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UTraceComponent* TraceComponent;
 
 protected:
 	// Called when the game starts or when spawned

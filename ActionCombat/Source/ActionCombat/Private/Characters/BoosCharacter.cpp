@@ -4,6 +4,7 @@
 #include "Characters/BoosCharacter.h"
 #include "Characters/StatsComponent.h"
 #include "Combat/EnemyProjectileComponent.h"
+#include "Combat/TraceComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Characters/LookAtPlayerComponent.h"
 #include "AIController.h"
@@ -18,6 +19,7 @@ ABoosCharacter::ABoosCharacter()
 	StatsComponent = CreateDefaultSubobject<UStatsComponent>(TEXT("StatsComponent"));
 	EnemyProjectileComponent = CreateDefaultSubobject<UEnemyProjectileComponent>(TEXT("EnemyProjectileComponent"));
 	LookAtPlayerComponent = CreateDefaultSubobject<ULookAtPlayerComponent>(TEXT("LookAtPlayerComponent"));
+	TraceComponent = CreateDefaultSubobject<UTraceComponent>(TEXT("TraceComponent"));
 
 }
 

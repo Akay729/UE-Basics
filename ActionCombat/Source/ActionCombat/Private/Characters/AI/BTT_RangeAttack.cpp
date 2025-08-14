@@ -11,11 +11,11 @@
 EBTNodeResult::Type UBTT_RangeAttack::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
     
-    ACharacter* OwnerCharacter { Cast<ACharacter>(OwnerComp.GetAIOwner()->GetPawn<ACharacter>()) };
+    ACharacter* OwnerCharacter { OwnerComp.GetAIOwner()->GetCharacter() };
     if (!IsValid(OwnerCharacter) || !RangeAttackMontage) return EBTNodeResult::Failed;
     
     OwnerCharacter->PlayAnimMontage(RangeAttackMontage);
-    UE_LOG(LogTemp, Warning, TEXT("DONE RANGE ATTACK"));
+    //UE_LOG(LogTemp, Warning, TEXT("DONE RANGE ATTACK"));
 	
     double RandomValue { UKismetMathLibrary::RandomFloat()};
 
