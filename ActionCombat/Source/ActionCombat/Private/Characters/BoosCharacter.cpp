@@ -3,6 +3,7 @@
 
 #include "Characters/BoosCharacter.h"
 #include "Characters/StatsComponent.h"
+#include "Characters/EStat.h"
 #include "Combat/EnemyProjectileComponent.h"
 #include "Combat/TraceComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
@@ -55,7 +56,7 @@ void ABoosCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 float ABoosCharacter::GetDamage()
 {
 	// Implement the logic to return the damage value for this character
-	return 10.0f; // Example value, replace with actual logic
+	return StatsComponent->Stats[EStats::Strength]; // Example value, replace with actual logic
 }
 
 void ABoosCharacter::DetectedPawn(APawn* PawnDetected, APawn* PawnWanted)
