@@ -14,11 +14,19 @@ EBTNodeResult::Type UBTT_RangeAttack::ExecuteTask(UBehaviorTreeComponent& OwnerC
     ACharacter* OwnerCharacter { OwnerComp.GetAIOwner()->GetCharacter() };
     if (!IsValid(OwnerCharacter) || !RangeAttackMontage) return EBTNodeResult::Failed;
     
+	//Check if is too close
+    float Distance = OwnerComp.GetBlackboardComponent()->GetValueAsFloat(TEXT("Distance"));
+    if (Distance < MeleeRange)
+    {
+        OwnerComp.GetBlackboardComponent()->SetValueAsEnum(TEXT("CurrentState"), EEnemyState::Melee);
+        AbortTask(OwnerComp, NodeMemory);
+        return EBTNodeResult::Aborted;
+    }
+
     OwnerCharacter->PlayAnimMontage(RangeAttackMontage);
     //UE_LOG(LogTemp, Warning, TEXT("DONE RANGE ATTACK"));
-	
+    
     double RandomValue { UKismetMathLibrary::RandomFloat()};
-
     if(RandomValue > Threshold)
     {
         Threshold = 0.9;
@@ -29,6 +37,5 @@ EBTNodeResult::Type UBTT_RangeAttack::ExecuteTask(UBehaviorTreeComponent& OwnerC
         Threshold -= 0.1;
     }
     
-
     return EBTNodeResult::Succeeded;
 }
