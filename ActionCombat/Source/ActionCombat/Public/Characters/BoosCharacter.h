@@ -14,6 +14,7 @@ class UBlackboardComponent;
 class UEnemyProjectileComponent;
 class ULookAtPlayerComponent;
 class UTraceComponent;
+class UCombatComponent;
 
 UCLASS()
 class ACTIONCOMBAT_API ABoosCharacter : public ACharacter, public IEnemy, public IFighter
@@ -36,6 +37,9 @@ public:
 
 	UPROPERTY(BlueprintReadOnly)
 	ULookAtPlayerComponent* LookAtPlayerComponent;
+
+	UPROPERTY(EditAnywhere)
+	UCombatComponent* CombatComponent;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UTraceComponent* TraceComponent;
@@ -51,9 +55,14 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UFUNCTION(BlueprintCallable)
+	void DetectedPawn(APawn* PawnDetected, APawn* PawnWanted);
+
 	// IEnemy Interface
 	virtual float GetDamage() override;
 
-	UFUNCTION(BlueprintCallable)
-	void DetectedPawn(APawn* PawnDetected, APawn* PawnWanted);
+	virtual void Attack() override;
+
+	virtual float GetAnimDuration() override;
+
 };

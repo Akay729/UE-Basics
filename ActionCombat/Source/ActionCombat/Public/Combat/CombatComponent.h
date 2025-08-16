@@ -27,6 +27,8 @@ public:
 	UPROPERTY(EditAnywhere)
 	TArray<UAnimMontage*> AnimMontages;
 
+	float AnimDuration {0};
+
 	UPROPERTY(BlueprintReadOnly)
 	int32 CurrentComboIndex {0};
 
@@ -57,5 +59,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	void HandleResetAttck();
+
+	void RandomAttack();
 		
 };

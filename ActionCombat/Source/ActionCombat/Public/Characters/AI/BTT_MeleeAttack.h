@@ -6,6 +6,8 @@
 #include "BehaviorTree/BTTaskNode.h"
 #include "BTT_MeleeAttack.generated.h"
 
+
+class UBlackboardComponent;
 /**
  * 
  */
@@ -13,5 +15,27 @@ UCLASS()
 class ACTIONCOMBAT_API UBTT_MeleeAttack : public UBTTaskNode
 {
 	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere)
+	float AttackRadius {200.f};
 	
+	UPROPERTY(EditAnywhere)
+	float AccetableRadius {120.f};
+
+	UPROPERTY(EditAnywhere)
+	float MeleeRange {1250.f};
+
+	FScriptDelegate MoveDelegate;
+
+	bool bIsFinished {false};
+
+protected:
+	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
+	virtual void TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
+
+public:
+	UBTT_MeleeAttack();
+
+	UFUNCTION()
+	void FinishAttackTask();
 };

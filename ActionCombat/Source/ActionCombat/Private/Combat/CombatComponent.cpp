@@ -18,7 +18,6 @@ UCombatComponent::UCombatComponent()
 	// ...
 }
 
-
 // Called when the game starts
 void UCombatComponent::BeginPlay()
 {
@@ -26,6 +25,14 @@ void UCombatComponent::BeginPlay()
 	Owner = GetOwner<ACharacter>();
 	if (!Owner) return;
 	
+}
+
+// Called every frame
+void UCombatComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+{
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	
+	// ...
 }
 
 void UCombatComponent::ComboAttack()
@@ -64,11 +71,12 @@ void UCombatComponent::HandleResetAttck()
 	bCanAttack = true;
 }
 
-// Called every frame
-void UCombatComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
+void UCombatComponent::RandomAttack()
+{
+	int RandomAnimMontage = UKismetMathLibrary::RandomIntegerInRange(0, AnimMontages.Num()-1);
+	//AnimDuration = AnimMontages[RandomAnimMontage]->CalculateSequenceLength(); //WRONG SOLUTION
+	AnimDuration = Owner->PlayAnimMontage(AnimMontages[RandomAnimMontage]);
 }
+
 

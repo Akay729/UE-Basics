@@ -9,6 +9,7 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Characters/LookAtPlayerComponent.h"
 #include "AIController.h"
+#include "Combat/CombatComponent.h"
 
 // Sets default values
 ABoosCharacter::ABoosCharacter()
@@ -21,6 +22,7 @@ ABoosCharacter::ABoosCharacter()
 	EnemyProjectileComponent = CreateDefaultSubobject<UEnemyProjectileComponent>(TEXT("EnemyProjectileComponent"));
 	LookAtPlayerComponent = CreateDefaultSubobject<ULookAtPlayerComponent>(TEXT("LookAtPlayerComponent"));
 	TraceComponent = CreateDefaultSubobject<UTraceComponent>(TEXT("TraceComponent"));
+	CombatComponent = CreateDefaultSubobject<UCombatComponent>(TEXT("CombatComponent"));
 
 }
 
@@ -57,6 +59,16 @@ float ABoosCharacter::GetDamage()
 {
 	// Implement the logic to return the damage value for this character
 	return StatsComponent->Stats[EStats::Strength]; // Example value, replace with actual logic
+}
+
+void ABoosCharacter::Attack()
+{
+	CombatComponent->RandomAttack();
+}
+
+float ABoosCharacter::GetAnimDuration()
+{
+	return CombatComponent->AnimDuration;
 }
 
 void ABoosCharacter::DetectedPawn(APawn* PawnDetected, APawn* PawnWanted)
