@@ -47,103 +47,88 @@ void UTraceComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 	for (const FTraceSockets Socket : Sockets)
 	{
 
-			FVector StartSocketLocaiton {SkeletalComponent->GetSocketLocation(Socket.WeaponStart)};
-			FVector EndSocketLocation {SkeletalComponent->GetSocketLocation(Socket.WeaponEnd)};
-			FQuat ShapeRotation {SkeletalComponent->GetSocketQuaternion(Socket.Roatation)};
+		FVector StartSocketLocaiton {SkeletalComponent->GetSocketLocation(Socket.WeaponStart)};
+		FVector EndSocketLocation {SkeletalComponent->GetSocketLocation(Socket.WeaponEnd)};
+		FQuat ShapeRotation {SkeletalComponent->GetSocketQuaternion(Socket.Roatation)};
+	
+		double DistanceStartEnd = FVector::Distance(StartSocketLocaiton, EndSocketLocation);
+	
+		FVector BoxHalfExtent {DistanceStartEnd, BoxCollisionLength, BoxCollisionLength}; // Half-height for the box
+		BoxHalfExtent *= 0.5f;
+	
+		FCollisionShape BoxShape = FCollisionShape::MakeBox(BoxHalfExtent);
+	
+		TArray<FHitResult> HitResults;
+	
+		bool isHit =  GetWorld()->SweepMultiByChannel(
+			HitResults, 
+			StartSocketLocaiton, 
+			EndSocketLocation, 
+			ShapeRotation, 
+			ECC_Fight, 
+			BoxShape, // Assuming a sphere shape for the trace
+			Params
+		);
 		
-			double DistanceStartEnd = FVector::Distance(StartSocketLocaiton, EndSocketLocation);
-		
-			FVector BoxHalfExtent {DistanceStartEnd, BoxCollisionLength, BoxCollisionLength}; // Half-height for the box
-			BoxHalfExtent *= 0.5f;
-		
-			FCollisionShape BoxShape = FCollisionShape::MakeBox(BoxHalfExtent);
-		
-			TArray<FHitResult> HitResults;
-		
-			bool isHit =  GetWorld()->SweepMultiByChannel(
-				HitResults, 
-				StartSocketLocaiton, 
-				EndSocketLocation, 
-				ShapeRotation, 
-				ECC_Fight, 
-				BoxShape, // Assuming a sphere shape for the trace
-				FCollisionQueryParams::DefaultQueryParam
-			);
+		for (const FHitResult Hit : HitResults) AllResult.Add(Hit);
+
+		if (bIsDebug)
+		{	
+			/*UE_LOG(
+ 			LogTemp, Warning, 
+			TEXT("Start: %s, End: %s, Rotation: %s"), 
+			*StartSocketLocaiton.ToString(), 
+			*EndSocketLocation.ToString(), 
+			*ShapeRotation.Rotator().ToString());  */
+	
+			FVector CenterPoint {
+				UKismetMathLibrary::VLerp(
+					StartSocketLocaiton, 
+					EndSocketLocation, 
+					0.5f
+				)
+			};
 			
-			for (const FHitResult Hit : HitResults) AllResult.Add(Hit);
-			//--------- NOPE ---------//
-			/* if (isHit)
-			{
-				for (const FHitResult& Hit : HitResults)
-				{
-					AActor* CurrentHitActor = Hit.GetActor();
-					UE_LOG(LogTemp, Warning, TEXT("Hit Actor: %s"), *CurrentHitActor->GetName());
-					if (CurrentHitActor && CurrentHitActor->Implements<UFighter>())
-					{
-						IFighter::Execute_GetDamage(CurrentHitActor);
-						// Handle the hit actor, e.g., apply damage or log it
-						//UE_LOG(LogTemp, Warning, TEXT("Hit Actor: %s"), *Hit.GetActor()->GetName());
-						}
-				}
-				}*/
-			//--------- END of NOPE ---------//	
-			if (bIsDebug)
-			{	
-				UE_LOG(
-				LogTemp, Warning, 
-				TEXT("Start: %s, End: %s, Rotation: %s"), 
-				*StartSocketLocaiton.ToString(), 
-				*EndSocketLocation.ToString(), 
-				*ShapeRotation.Rotator().ToString()); 
-		
-				FVector CenterPoint {
-					UKismetMathLibrary::VLerp(
-						StartSocketLocaiton, 
-						EndSocketLocation, 
-						0.5f
-					)
-				};
-				
-				UKismetSystemLibrary::DrawDebugBox(
-					GetWorld(), 
-					CenterPoint, 
-					BoxShape.GetExtent(),
-					isHit ? FColor::Green : FColor::Red,
-					ShapeRotation.Rotator(),
-					1.0f,
-					2.0f
-				);
-			}
+			UKismetSystemLibrary::DrawDebugBox(
+				GetWorld(), 
+				CenterPoint, 
+				BoxShape.GetExtent(),
+				isHit ? FColor::Green : FColor::Red,
+				ShapeRotation.Rotator(),
+				1.0f,
+				2.0f
+			);
+		}
+	}
+
+	if (AllResult.Num() > 0)
+	{
+		float CharacterDamage {};
+		IFighter* FighterInterface = Cast<IFighter>(GetOwner());
+		if (FighterInterface)
+		{
+			CharacterDamage = FighterInterface->GetDamage();
 		}
 
-		if (AllResult.Num() > 0)
+		FDamageEvent DamageEvent;
+		//TSet<FHitResult> HitResultsSet(HitResults);
+
+		for (const FHitResult& Hit : AllResult)
 		{
-			float CharacterDamage {};
-			IFighter* FighterInterface = Cast<IFighter>(GetOwner());
-			if (FighterInterface)
-			{
-				CharacterDamage = FighterInterface->GetDamage();
-			}
-	
-			FDamageEvent DamageEvent;
-			//TSet<FHitResult> HitResultsSet(HitResults);
-	
-			for (const FHitResult& Hit : AllResult)
-			{
-				AActor* CurrentHitActor = Hit.GetActor();
-	
-				if (ActorToIgnore.Contains(CurrentHitActor)) continue;
-	
-				CurrentHitActor->TakeDamage(
-					CharacterDamage, 
-					DamageEvent, 
-					GetOwner()->GetInstigatorController(), 
-					GetOwner()
-				);
-	
-				ActorToIgnore.AddUnique(CurrentHitActor);
-			}
+			AActor* CurrentHitActor = Hit.GetActor();
+
+			if (ActorToIgnore.Contains(CurrentHitActor)) continue;
+
+			CurrentHitActor->TakeDamage(
+				CharacterDamage, 
+				DamageEvent, 
+				GetOwner()->GetInstigatorController(), 
+				GetOwner()
+			);
+
+			ActorToIgnore.AddUnique(CurrentHitActor);
 		}
+	}
 	
 }
 	 
