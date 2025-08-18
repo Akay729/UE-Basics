@@ -9,7 +9,7 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "Engine/DamageEvents.h"
 
-#define ECC_Fight ECC_GameTraceChannel1
+#define ECC_Fight ECollisionChannel::ECC_GameTraceChannel1
 
 // Sets default values for this component's properties
 UTraceComponent::UTraceComponent()
@@ -80,7 +80,14 @@ void UTraceComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 			*StartSocketLocaiton.ToString(), 
 			*EndSocketLocation.ToString(), 
 			*ShapeRotation.Rotator().ToString());  */
-	
+			for (const FHitResult Hit : AllResult) 
+			{
+				UE_LOG(
+ 			LogTemp, Warning, 
+			TEXT("nemico colpito"));
+			
+			}
+
 			FVector CenterPoint {
 				UKismetMathLibrary::VLerp(
 					StartSocketLocaiton, 
@@ -101,33 +108,33 @@ void UTraceComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 		}
 	}
 
-	if (AllResult.Num() > 0)
+	if (AllResult.Num() == 0) return;
+	
+	float CharacterDamage {0.0f};
+	
+	IFighter* FighterInterface = Cast<IFighter>(GetOwner());
+	if (FighterInterface)
 	{
-		float CharacterDamage {};
-		IFighter* FighterInterface = Cast<IFighter>(GetOwner());
-		if (FighterInterface)
-		{
-			CharacterDamage = FighterInterface->GetDamage();
-		}
+		CharacterDamage = FighterInterface->GetDamage();
+	}
 
-		FDamageEvent DamageEvent;
-		//TSet<FHitResult> HitResultsSet(HitResults);
+	FDamageEvent DamageEvent;
+	//TSet<FHitResult> HitResultsSet(HitResults);
 
-		for (const FHitResult& Hit : AllResult)
-		{
-			AActor* CurrentHitActor = Hit.GetActor();
+	for (const FHitResult& Hit : AllResult)
+	{
+		AActor* CurrentHitActor = Hit.GetActor();
 
-			if (ActorToIgnore.Contains(CurrentHitActor)) continue;
+		if (ActorToIgnore.Contains(CurrentHitActor)) continue;
 
-			CurrentHitActor->TakeDamage(
-				CharacterDamage, 
-				DamageEvent, 
-				GetOwner()->GetInstigatorController(), 
-				GetOwner()
-			);
+		CurrentHitActor->TakeDamage(
+			CharacterDamage, 
+			DamageEvent, 
+			GetOwner()->GetInstigatorController(), 
+			GetOwner()
+		);
 
-			ActorToIgnore.AddUnique(CurrentHitActor);
-		}
+		ActorToIgnore.AddUnique(CurrentHitActor);
 	}
 	
 }

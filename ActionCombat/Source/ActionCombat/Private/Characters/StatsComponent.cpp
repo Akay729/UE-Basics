@@ -37,6 +37,7 @@ void UStatsComponent::ReduceDamage(float Amount)
 
 	float ReducedHealth = FMath::Clamp(Stats[EStats::Health] - Amount, 0.0f, Stats[EStats::MaxHealth]);
 	Stats[EStats::Health] = ReducedHealth;
+	OnHealthChangeDelegate.Broadcast();
 
 	if (Stats[EStats::Health] == 0.0f) 
 	{
@@ -50,6 +51,8 @@ void UStatsComponent::ReduceStamina(float Amount)
 	Stats[EStats::Stamina] = ReducedStamina;
 
 	bCanRegenerateStamina = false;
+	
+	OnStaminaChangeDelegate.Broadcast();
 
 	FLatentActionInfo LatentInfo
 	{
@@ -76,6 +79,7 @@ void UStatsComponent::RestoreStamina()
 		GetWorld()->GetDeltaSeconds(), 
 		StaminaRegenRate // Interpolation speed
 	);
+	OnStaminaChangeDelegate.Broadcast();
 }
 
 
@@ -83,4 +87,8 @@ void UStatsComponent::RestoreStamina()
 void UStatsComponent::EnableRegeration()
 {
 	bCanRegenerateStamina = true;
+}
+float UStatsComponent::GetStatPercentage(EStats Current, EStats Max)
+{
+return Stats[Current]/ Stats[Max];
 }

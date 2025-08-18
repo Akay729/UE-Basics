@@ -7,7 +7,15 @@
 #include "Characters/EStat.h"
 #include "StatsComponent.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE(
+	FOnHealthChangeSignature,
+	UStatsComponent, OnHealthChangeDelegate
+);
 
+DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE(
+	FOnStaminaChangeSignature,
+	UStatsComponent, OnStaminaChangeDelegate
+);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class ACTIONCOMBAT_API UStatsComponent : public UActorComponent
@@ -30,6 +38,11 @@ public:
 	UPROPERTY(EditAnywhere)
 	TMap<TEnumAsByte<EStats>, float> Stats;
 
+	UPROPERTY(BlueprintAssignable)
+	FOnHealthChangeSignature OnHealthChangeDelegate;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnStaminaChangeSignature OnStaminaChangeDelegate;
 
 protected:
 	// Called when the game starts
@@ -50,4 +63,7 @@ public:
 
 	UFUNCTION()
 	void EnableRegeration();
+
+	UFUNCTION(BlueprintPure)
+	float GetStatPercentage(EStats Current, EStats Max);
 };
