@@ -4,6 +4,7 @@
 #include "Characters/StatsComponent.h"
 #include "kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "Interfaces/Fighter.h"
 
 // Sets default values for this component's properties
 UStatsComponent::UStatsComponent()
@@ -32,8 +33,11 @@ void UStatsComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 	// ...
 }
 
-void UStatsComponent::ReduceDamage(float Amount)
+void UStatsComponent::ReduceHealth(float Amount, AActor* Opponent)
 {	
+	IFighter* FighterRef {GetOwner<IFighter>()};
+	if (!FighterRef->CanTakeDamage(Opponent)) return;
+	
 
 	float ReducedHealth = FMath::Clamp(Stats[EStats::Health] - Amount, 0.0f, Stats[EStats::MaxHealth]);
 	Stats[EStats::Health] = ReducedHealth;

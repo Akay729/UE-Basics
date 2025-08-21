@@ -51,7 +51,7 @@ void ULockonComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 		if( DistanceToTarget > BreakDistance)
 		{
-			EndBlock();
+			EndLockon();
 			return;
 		}
 		
@@ -110,7 +110,7 @@ void ULockonComponent::StartLockOn(float SphereRadius, float SweepRange)
 
 }
 
-void ULockonComponent::EndBlock()
+void ULockonComponent::EndLockon()
 {
 	if(!OwnerCharacter) return;
 	// Reset the lock-on state
@@ -132,7 +132,7 @@ void ULockonComponent::ToggleLockOn(float SphereRadius, float SweepRange)
 {
 	if (CurrentTargetActor)
 	{
-		EndBlock();
+		EndLockon();
 	}
 	else
 	{

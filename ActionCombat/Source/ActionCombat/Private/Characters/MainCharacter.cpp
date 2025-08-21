@@ -122,6 +122,10 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 		// Attacking
 		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Started, this, &AMainCharacter::Attack);
+		
+		// Blocking
+		EnhancedInputComponent->BindAction(BlockAction, ETriggerEvent::Started, this, &AMainCharacter::StartBlocking);
+		EnhancedInputComponent->BindAction(BlockAction, ETriggerEvent::Completed, this, &AMainCharacter::EndBlocking);
 	}
 	else
 	{
@@ -171,6 +175,17 @@ void AMainCharacter::Attack()
 	UE_LOG(LogTemp, Display, TEXT("Attack called"));
 
 }
+void AMainCharacter::StartBlocking()
+{
+	PlayerAnimInstance->bIsBlocking = true;
+}
+
+void AMainCharacter::EndBlocking()
+{
+	PlayerAnimInstance->bIsBlocking = false;
+}
+
+
 
 // --------Fighter Interface implementation --------
 float AMainCharacter::GetDamage()
@@ -182,4 +197,25 @@ float AMainCharacter::GetDamage()
 bool AMainCharacter::HasEnoughStamina(float StaminaCost) const
 {
 	return StatsComponent->Stats[EStats::Stamina] >= StaminaCost;
+}
+
+void AMainCharacter::EndLockonWithActor(AActor* Actor)
+{
+	if (LockonComponent->CurrentTargetActor != Actor) return;
+	LockonComponent->EndLockon();
+}
+
+void AMainCharacter::HandleDeath()
+{
+	DisableInput(Cast<APlayerController>(Controller));
+	if (IsValid(DeathAnimMontage)) PlayAnimMontage(DeathAnimMontage);
+}
+
+bool AMainCharacter::CanTakeDamage(AActor* Opponent)
+{
+	if(PlayerAnimInstance->bIsBlocking)
+	{
+		return BlockComponent->Check(Opponent);
+	}
+	return true;
 }

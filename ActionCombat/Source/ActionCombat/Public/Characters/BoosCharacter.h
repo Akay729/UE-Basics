@@ -15,6 +15,7 @@ class UEnemyProjectileComponent;
 class ULookAtPlayerComponent;
 class UTraceComponent;
 class UCombatComponent;
+class AAIController;
 
 UCLASS()
 class ACTIONCOMBAT_API ABoosCharacter : public ACharacter, public IEnemy, public IFighter
@@ -25,6 +26,12 @@ class ACTIONCOMBAT_API ABoosCharacter : public ACharacter, public IEnemy, public
 	TEnumAsByte<EEnemyState> InitialState;
 
 	UBlackboardComponent* BlackboardComponent;
+
+	UPROPERTY(EditAnywhere)
+	UAnimMontage* DeathAnimMontage;
+
+	AAIController* AIController;
+
 public:
 	// Sets default values for this character's properties
 	ABoosCharacter();
@@ -58,11 +65,19 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void DetectedPawn(APawn* PawnDetected, APawn* PawnWanted);
 
+	UFUNCTION(BlueprintCallable)
+	void HandlePlayerDeath();
+
+	UFUNCTION(BlueprintCallable)
+	void HandleDeath();
+
 	// IEnemy Interface
 	virtual float GetDamage() override;
 
 	virtual void Attack() override;
 
 	virtual float GetAnimDuration() override;
+
+	void FinishDeathAnimation();
 
 };

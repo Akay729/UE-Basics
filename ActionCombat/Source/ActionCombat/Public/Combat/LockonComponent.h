@@ -31,6 +31,9 @@ class ACTIONCOMBAT_API ULockonComponent : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	ULockonComponent();
+	
+	UFUNCTION(BlueprintCallable)
+	void EndLockon();
 
 protected:
 	// Called when the game starts
@@ -39,9 +42,6 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void StartLockOn(float SphereRadius = 100.0f, float Range = 1000.0f);
 
-	UFUNCTION(BlueprintCallable)
-	void EndBlock();
-	
 	UFUNCTION(BlueprintCallable)
 	void ToggleLockOn(float SphereRadius = 100.0f, float Range = 1000.0f);
 

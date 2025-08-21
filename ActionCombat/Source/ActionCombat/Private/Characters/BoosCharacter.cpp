@@ -10,6 +10,10 @@
 #include "Characters/LookAtPlayerComponent.h"
 #include "AIController.h"
 #include "Combat/CombatComponent.h"
+#include "Characters/MainCharacter.h"
+#include "BrainComponent.h"
+#include "Components/CapsuleComponent.h"
+#include "Interfaces/MainPlayer.h"
 
 // Sets default values
 ABoosCharacter::ABoosCharacter()
@@ -31,13 +35,17 @@ void ABoosCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	AAIController* AIController = Cast<AAIController>(GetController());
+	AIController = Cast<AAIController>(GetController());
 	if (!AIController) return;
 
 	BlackboardComponent = AIController->GetBlackboardComponent();
 	if(!IsValid(BlackboardComponent)) return; //Throw me errors :(
 	
 	BlackboardComponent->SetValueAsEnum(TEXT("CurrentState"), InitialState);
+
+	GetWorld()->GetFirstPlayerController()
+		->GetPawn<AMainCharacter>()
+		->StatsComponent->OnHealthZeroDelegate.AddDynamic(this, &ABoosCharacter::HandlePlayerDeath);
 }
 
 // Called every frame
@@ -79,4 +87,41 @@ void ABoosCharacter::DetectedPawn(APawn* PawnDetected, APawn* PawnWanted)
     if (PawnDetected != PawnWanted || CurrentState != EEnemyState::Idle) return;
 	UE_LOG(LogTemp, Warning, TEXT("Detected Same Pawn"));
 	BlackboardComponent->SetValueAsEnum(TEXT("CurrentState"), EEnemyState::Range);
+}
+
+void ABoosCharacter::HandlePlayerDeath()
+{
+	BlackboardComponent->SetValueAsEnum(TEXT("CurrentState"),  EEnemyState::GameOver);
+
+}
+
+void ABoosCharacter::HandleDeath()
+{
+	float AnimationDuration = PlayAnimMontage(DeathAnimMontage);
+	
+	BlackboardComponent->SetValueAsEnum(TEXT("CurrentState"),  EEnemyState::GameOver);
+	
+	LookAtPlayerComponent->bCanRotate = false;
+	
+	AIController->GetBrainComponent()->StopLogic("defeated");
+	FindComponentByClass<UCapsuleComponent>()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	FTimerHandle DeathTimerHandler;
+	GetWorldTimerManager().SetTimer(
+		DeathTimerHandler,
+		this,
+		&ABoosCharacter::FinishDeathAnimation,
+		AnimationDuration,
+		false
+	);
+
+	IMainPlayer* PlayerRef = GetWorld()->GetFirstPlayerController()->GetPawn<IMainPlayer>();
+
+	if(!PlayerRef) return;
+	PlayerRef->EndLockonWithActor(this);
+}
+
+void ABoosCharacter::FinishDeathAnimation()
+{
+	Destroy();
 }

@@ -29,6 +29,9 @@ protected:
 	float CurrentDirection {0.0f};
 
 public:
+	
+	UPROPERTY(BlueprintReadWrite)
+	bool bIsBlocking {false};
 
 	UFUNCTION(BlueprintCallable)
 	void HandleUpdateTarget(AActor* TargetActor);

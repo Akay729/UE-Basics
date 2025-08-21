@@ -40,6 +40,10 @@ void UEnemyProjectileComponent::SpawnProjectile(FName ComponentName, TSubclassOf
 	FVector PlayerLocation {GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation()};
 	FRotator SpawnRotation { UKismetMathLibrary::FindLookAtRotation(SpawnLocation, PlayerLocation) };
 
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.Owner = GetOwner();
+	SpawnParams.Instigator = Cast<APawn>(SpawnParams.Owner);
 
-	GetWorld()->SpawnActor(ProjectileClass, &SpawnLocation, &SpawnRotation);
+
+	GetWorld()->SpawnActor(ProjectileClass, &SpawnLocation, &SpawnRotation, SpawnParams);
 }

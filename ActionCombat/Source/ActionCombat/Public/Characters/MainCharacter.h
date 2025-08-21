@@ -60,9 +60,13 @@ class ACTIONCOMBAT_API AMainCharacter : public ACharacter, public IMainPlayer, p
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* AttackAction;
 
+	/** Block Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* BlockAction;
+
 public:
 	AMainCharacter();
-
+	/** Components */
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	UStatsComponent* StatsComponent;
 
@@ -81,6 +85,13 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	UPlayerActionsComponent* PlayerActionsComponent;
 
+	/** Death Animation Montange */
+	UPROPERTY(EditAnywhere)
+	UAnimMontage* DeathAnimMontage;
+
+	UFUNCTION(BlueprintCallable)
+	void HandleDeath();
+
 protected:
 
 	virtual void BeginPlay() override;
@@ -92,6 +103,9 @@ protected:
 	void Look(const FInputActionValue& Value);
 
 	void Attack();
+	
+	void StartBlocking();
+	void EndBlocking();
 
 	/* UPROPERTY(BlueprintReadOnly)
 	UCombatComponent* CombatComponent; */
@@ -113,8 +127,10 @@ public:
 
 	// Fighter Interface
 	virtual float GetDamage() override;
+	virtual bool CanTakeDamage(AActor* Opponent) override;
 
 	// IMainPlayer Interface
 	virtual bool HasEnoughStamina(float StaminaCost) const override;
+	virtual void EndLockonWithActor(AActor* Actor) override;
 	
 };

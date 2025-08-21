@@ -16,4 +16,5 @@ enum EEnemyState
 	Block UMETA(DisplayName = "Block"),
 	Damaged UMETA(DisplayName = "Damaged"),
 	Dead UMETA(DisplayName = "Dead"),
+	GameOver UMETA(DisplayName = "Game Over")
 };
