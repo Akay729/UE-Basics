@@ -8,13 +8,20 @@
 #include "StatsComponent.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE(
-	FOnHealthChangeSignature,
-	UStatsComponent, OnHealthChangeDelegate
+	FOnZeroHealthSignature,
+	UStatsComponent, OnHealthZeroDelegate
 );
 
-DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE(
+DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_OneParam(
+	FOnHealthChangeSignature,
+	UStatsComponent, OnHealthChangeDelegate,
+	float, NewHealth
+);
+
+DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_OneParam(
 	FOnStaminaChangeSignature,
-	UStatsComponent, OnStaminaChangeDelegate
+	UStatsComponent, OnStaminaChangeDelegate,
+	float, NewStamina
 );
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -43,6 +50,9 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FOnStaminaChangeSignature OnStaminaChangeDelegate;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnZeroHealthSignature OnHealthZeroDelegate;
 
 protected:
 	// Called when the game starts

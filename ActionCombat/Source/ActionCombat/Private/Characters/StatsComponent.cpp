@@ -37,10 +37,11 @@ void UStatsComponent::ReduceDamage(float Amount)
 
 	float ReducedHealth = FMath::Clamp(Stats[EStats::Health] - Amount, 0.0f, Stats[EStats::MaxHealth]);
 	Stats[EStats::Health] = ReducedHealth;
-	OnHealthChangeDelegate.Broadcast();
+	OnHealthChangeDelegate.Broadcast(GetStatPercentage(EStats::Health, EStats::MaxHealth));
 
-	if (Stats[EStats::Health] == 0.0f) 
+	if (Stats[EStats::Health] == 0) 
 	{
+		OnHealthZeroDelegate.Broadcast();
 		UE_LOG(LogTemp, Display, TEXT("Raggiunto il limite di danni!"));
 	}
 }
@@ -52,7 +53,7 @@ void UStatsComponent::ReduceStamina(float Amount)
 
 	bCanRegenerateStamina = false;
 	
-	OnStaminaChangeDelegate.Broadcast();
+	OnStaminaChangeDelegate.Broadcast(GetStatPercentage(EStats::Stamina, EStats::MaxStamina));
 
 	FLatentActionInfo LatentInfo
 	{
@@ -79,7 +80,7 @@ void UStatsComponent::RestoreStamina()
 		GetWorld()->GetDeltaSeconds(), 
 		StaminaRegenRate // Interpolation speed
 	);
-	OnStaminaChangeDelegate.Broadcast();
+	OnStaminaChangeDelegate.Broadcast(GetStatPercentage(EStats::Stamina, EStats::MaxStamina));
 }
 
 
